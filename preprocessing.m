@@ -45,12 +45,16 @@ plot(S6_NO_FLOAT.T_01.Raw.EMG.LMG)
 title('Raw signal');
 subplot(3,2,2)
 plot(S6_NO_FLOAT.T_01.Filtered.LMG)
-title('
+title('BP filter 10-499 Hz');
 subplot(3,2,3)
 plot(S6_NO_FLOAT.T_01.Rectified.LMG)
+title('Rectification');
 subplot(3,2,4)
 plot(S6_NO_FLOAT.T_01.Filtered2.LMG)
+title('HP filter 30 Hz');
 subplot(3,2,5)
 plot(S6_NO_FLOAT.T_01.Filtered3.LMG)
+title('Notch filter 50 Hz');
 subplot(3,2,6)
 plot(S6_NO_FLOAT.T_01.Filtered4.LMG)
+title('LP filter 10 Hz');
