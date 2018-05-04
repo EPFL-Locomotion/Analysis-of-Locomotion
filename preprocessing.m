@@ -42,8 +42,10 @@ for Trialidx=1:length(Trials)
 end
 subplot(3,2,1)
 plot(S6_NO_FLOAT.T_01.Raw.EMG.LMG)
+title('Raw signal');
 subplot(3,2,2)
 plot(S6_NO_FLOAT.T_01.Filtered.LMG)
+title('
 subplot(3,2,3)
 plot(S6_NO_FLOAT.T_01.Rectified.LMG)
 subplot(3,2,4)
