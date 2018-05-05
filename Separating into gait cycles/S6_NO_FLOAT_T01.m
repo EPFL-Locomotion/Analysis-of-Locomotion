@@ -10,7 +10,6 @@ LTOEGait = S6_NO_FLOAT.T_01.Raw.Kin.LTOE(:,3);
 [LeftIC(3,2),LeftIC(3,1)]  = max(LTOEGait(321:450));
 [LeftIC(4,2),LeftIC(4,1)]  = max(LTOEGait(451:560));
 
-
 %correction for time mismatch (beginning of each scan)
 
 LeftIC(2,1)  = LeftIC(2,1) + 200;
@@ -23,7 +22,6 @@ LeftIC(4,1)  = LeftIC(4,1) + 450;
 [LeftTC(2,2),LeftTC(2,1)]  = min(LTOEGait(301:450));
 [LeftTC(3,2),LeftTC(3,1)]  = min(LTOEGait(451:550));
 [LeftTC(4,2),LeftTC(4,1)]  = min(LTOEGait(550:650));
-
 
 %correction for time mismatch (beginning of each scan)
 
