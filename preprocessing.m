@@ -41,6 +41,8 @@ for Trialidx=1:length(Trials)
     end
    end
 end
+
+figure(1)
 subplot(2,3,1)
 plot(S6_NO_FLOAT.T_02.Raw.EMG.LTA)
 title('Raw signal');
@@ -56,3 +58,22 @@ title('Notch filter 50 Hz');
 subplot(2,3,5)
 plot(S6_NO_FLOAT.T_02.Filtered4.LTA)
 title('LP filter 10 Hz');
+suptitle('Tibialis anterior - left')
+
+figure(2)
+subplot(2,3,1)
+plot(S6_NO_FLOAT.T_02.Raw.EMG.LMG)
+title('Raw signal');
+subplot(2,3,2)
+plot(S6_NO_FLOAT.T_02.Filtered.LMG)
+title('BP filter 10-499 Hz');
+subplot(2,3,3)
+plot(S6_NO_FLOAT.T_02.Rectified.LMG)
+title('Rectification');
+subplot(2,3,4)
+plot(S6_NO_FLOAT.T_02.Filtered3.LMG)
+title('Notch filter 50 Hz');
+subplot(2,3,5)
+plot(S6_NO_FLOAT.T_02.Filtered4.LMG)
+title('LP filter 10 Hz');
+suptitle('Gastrocnemius - left')
