@@ -4,18 +4,8 @@ clc
 
 % adding the paths and loading data
 
-addpath(genpath('Separating into gait cycles'));
-addpath(genpath('SCI subject (updated file)\NO_FLOAT_CRUTCHES\MAT'));
-addpath(genpath('SCI subject (updated file)\NO_FLOAT_CRUTCHES\GAIT FILES'));
-addpath(genpath('SCI subject (updated file)\FLOAT_NO_CRUTCHES\MAT'));
-addpath(genpath('SCI subject (updated file)\FLOAT_NO_CRUTCHES\GAIT FILES'));
-addpath(genpath('Healthy Recordings\Subject6\NO_FLOAT'));
 addpath(genpath('Healthy Recordings\Subject6\FLOAT'));
-addpath(fullfile('Separating into gait cycles')); 
 
-load('NO_FLOAT_CRUTCHES.mat');
-load('FLOAT_NO_CRUTCHES.mat');
-load('S6_NO_FLOAT.mat');
 load('S6_FLOAT.mat');
 
 
@@ -140,7 +130,7 @@ for k=1:length(trials)
             S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).Swing.(sensors{j})=(find(A(:,3)==max(A(150:end,3)))-find(A(:,3)==min(A(100:end,3))))/100;
 
             % max toe step height
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).StepHeight.(sensors{j})=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})(:,3))
+            S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).StepHeight.(sensors{j})=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})(:,3));
             
         end
         
@@ -158,7 +148,7 @@ for k=1:length(trials)
         for j=1:length(sensors)
          
             % max knee height
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).KneeHeight.(sensors{j})=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})(:,3))
+            S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).KneeHeight.(sensors{j})=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})(:,3));
             
         end
     end
@@ -166,107 +156,64 @@ end
 
 
 
-%% angles for LEFT foot
+%% angles for both LEFT and RIGHT feet
+
+sensors_left={'LTOE', 'LANK', 'LKNE', 'LHIP', 'LeftAngles'};
+sensors_right={'RTOE', 'RANK', 'RKNE', 'RHIP', 'RightAngles'};
+sensors=[sensors_left; sensors_right];
 
 numbers={'One', 'Two', 'Three', 'Four'};
 trials={'T_01', 'T_02', 'T_03'};
 
-for k=1:length(trials)
+for n=1:2
     
-    for j=1:length(numbers)
+    for k=1:length(trials)
         
-        for i=1:size(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LTOE,1)
+        for j=1:length(numbers)
             
-            LTOE_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LTOE(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LTOE(i,3)];
-            LANK_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LANK(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LANK(i,3)];
-            LKNE_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LKNE(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LKNE(i,3)];
-            LHIP_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LHIP(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LHIP(i,3)];
-            
-            VectorANKLE_TOE(i,:)=[(LANK_points(i,1)-LTOE_points(i,1)) (LANK_points(i,2)-LTOE_points(i,2))];
-            VectorKNEE_ANKLE(i,:)=[(LKNE_points(i,1)-LANK_points(i,1)) (LKNE_points(i,2)-LANK_points(i,2))];
-            VectorHIP_KNEE(i,:)=[(LHIP_points(i,1)-LKNE_points(i,1)) (LHIP_points(i,2)-LKNE_points(i,2))];
-            
-            Vertical = [0 1];
-            Horizontal = [1 0];
-            
-            % hip angle to get extension/flexion
-            Angle_hip_vertical(i)=acos(dot(VectorHIP_KNEE(i,:),Vertical)/(norm(VectorHIP_KNEE(i,:))*norm(Vertical)));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LeftAngles.HipAngle(i)=Angle_hip_vertical(i)*180/pi;
-            
-            % joint angle knee
-            Angle_knee(i)=acos(dot(VectorHIP_KNEE(i,:),VectorKNEE_ANKLE(i,:))/(norm(VectorHIP_KNEE(i,:))*norm(VectorKNEE_ANKLE(i,:))));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LeftAngles.KneeJointAngle(i)=Angle_knee(i)*180/pi;
-            
-            % elevation angle of the knee joint
-            Angle_knee_vertical(i)=acos(dot(VectorKNEE_ANKLE(i,:),Vertical)/(norm(VectorKNEE_ANKLE(i,:))*norm(Vertical)));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LeftAngles.KneeElevAngle(i)=Angle_knee_vertical(i)*180/pi;
-            
-            % joint angle ankle
-            Angle_ankle(i)=acos(dot(VectorKNEE_ANKLE(i,:),VectorANKLE_TOE(i,:))/(norm(VectorKNEE_ANKLE(i,:))*norm(VectorANKLE_TOE(i,:))));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LeftAngles.AnkleJointAngle(i)=Angle_ankle(i)*180/pi;
-            
-            % elevation angle af the ankle joint
-            Angle_ankle_vertical(i)=acos(dot(VectorANKLE_TOE(i,:),Vertical)/(norm(VectorANKLE_TOE(i,:))*norm(Vertical)));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LeftAngles.AnkleElevAngle(i)=Angle_ankle_vertical(i)*180/pi;
-            
-            % elevation toe from the ground
-            Angle_toe_hor(i)=acos(dot(VectorANKLE_TOE(i,:),Horizontal)/(norm(VectorANKLE_TOE(i,:))*norm(Horizontal)));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).LeftAngles.ToeElevAngle(i)=Angle_toe_hor(i)*180/pi;
-            
+            for i=1:size(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,1}),1)
+                
+                TOE_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,1})(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,1})(i,3)];
+                ANK_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,2})(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,2})(i,3)];
+                KNE_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,3})(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,3})(i,3)];
+                HIP_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,4})(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,4})(i,3)];
+                
+                VectorANKLE_TOE(i,:)=[(ANK_points(i,1)-TOE_points(i,1)) (ANK_points(i,2)-TOE_points(i,2))];
+                VectorKNEE_ANKLE(i,:)=[(KNE_points(i,1)-ANK_points(i,1)) (KNE_points(i,2)-ANK_points(i,2))];
+                VectorHIP_KNEE(i,:)=[(HIP_points(i,1)-KNE_points(i,1)) (HIP_points(i,2)-KNE_points(i,2))];
+                
+                Vertical = [0 1];
+                Horizontal = [1 0];
+                
+                % hip angle to get extension/flexion
+                Angle_hip_vertical(i)=acos(dot(VectorHIP_KNEE(i,:),Vertical)/(norm(VectorHIP_KNEE(i,:))*norm(Vertical)));
+                S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,5}).HipAngle(i)=Angle_hip_vertical(i)*180/pi;
+                
+                % joint angle knee
+                Angle_knee(i)=acos(dot(VectorHIP_KNEE(i,:),VectorKNEE_ANKLE(i,:))/(norm(VectorHIP_KNEE(i,:))*norm(VectorKNEE_ANKLE(i,:))));
+                S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,5}).KneeJointAngle(i)=Angle_knee(i)*180/pi;
+                
+                % elevation angle of the knee joint
+                Angle_knee_vertical(i)=acos(dot(VectorKNEE_ANKLE(i,:),Vertical)/(norm(VectorKNEE_ANKLE(i,:))*norm(Vertical)));
+                S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,5}).KneeElevAngle(i)=Angle_knee_vertical(i)*180/pi;
+                
+                % joint angle ankle
+                Angle_ankle(i)=acos(dot(VectorKNEE_ANKLE(i,:),VectorANKLE_TOE(i,:))/(norm(VectorKNEE_ANKLE(i,:))*norm(VectorANKLE_TOE(i,:))));
+                S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,5}).AnkleJointAngle(i)=Angle_ankle(i)*180/pi;
+                
+                % elevation angle af the ankle joint
+                Angle_ankle_vertical(i)=acos(dot(VectorANKLE_TOE(i,:),Vertical)/(norm(VectorANKLE_TOE(i,:))*norm(Vertical)));
+                S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,5}).AnkleElevAngle(i)=Angle_ankle_vertical(i)*180/pi;
+                
+                % elevation toe from the ground
+                Angle_toe_hor(i)=acos(dot(VectorANKLE_TOE(i,:),Horizontal)/(norm(VectorANKLE_TOE(i,:))*norm(Horizontal)));
+                S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,5}).ToeElevAngle(i)=Angle_toe_hor(i)*180/pi;
+                
+            end
         end
     end
 end
 
-%% angles for RIGHT foot
-
-numbers={'One', 'Two', 'Three', 'Four'};
-trials={'T_01', 'T_02', 'T_03'};
-
-for k=1:length(trials)
-    
-    for j=1:length(numbers)
-        
-        for i=1:size(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RTOE,1)
-            
-            RTOE_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RTOE(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RTOE(i,3)];
-            RANK_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RANK(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RANK(i,3)];
-            RKNE_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RKNE(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RKNE(i,3)];
-            RHIP_points(i,:)=[S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RHIP(i,2) S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RHIP(i,3)];
-            
-            VectorANKLE_TOE(i,:)=[(RANK_points(i,1)-RTOE_points(i,1)) (RANK_points(i,2)-RTOE_points(i,2))];
-            VectorKNEE_ANKLE(i,:)=[(RKNE_points(i,1)-RANK_points(i,1)) (RKNE_points(i,2)-RANK_points(i,2))];
-            VectorHIP_KNEE(i,:)=[(RHIP_points(i,1)-RKNE_points(i,1)) (RHIP_points(i,2)-RKNE_points(i,2))];
-            
-            Vertical = [0 1];
-            Horizontal = [1 0];
-            
-            % angle to get extension/flexion
-            Angle_hip_vertical(i)=acos(dot(VectorHIP_KNEE(i,:),Vertical)/(norm(VectorHIP_KNEE(i,:))*norm(Vertical)));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RightAngles.HipAngle(i)=Angle_hip_vertical(i)*180/pi;
-            
-            % joint angle knee
-            Angle_knee(i)=acos(dot(VectorHIP_KNEE(i,:),VectorKNEE_ANKLE(i,:))/(norm(VectorHIP_KNEE(i,:))*norm(VectorKNEE_ANKLE(i,:))));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RightAngles.KneeJointAngle(i)=Angle_knee(i)*180/pi;
-            
-            % elevation angle of the knee joint
-            Angle_knee_vertical(i)=acos(dot(VectorKNEE_ANKLE(i,:),Vertical)/(norm(VectorKNEE_ANKLE(i,:))*norm(Vertical)));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RightAngles.KneeElevAngle(i)=Angle_knee_vertical(i)*180/pi;
-            
-            % joint angle ankle
-            Angle_ankle(i)=acos(dot(VectorKNEE_ANKLE(i,:),VectorANKLE_TOE(i,:))/(norm(VectorKNEE_ANKLE(i,:))*norm(VectorANKLE_TOE(i,:))));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RightAngles.AnkleJointAngle(i)=Angle_ankle(i)*180/pi;
-            
-            % elevation angle af the ankle joint
-            Angle_ankle_vertical(i)=acos(dot(VectorANKLE_TOE(i,:),Vertical)/(norm(VectorANKLE_TOE(i,:))*norm(Vertical)));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RightAngles.AnkleElevAngle(i)=Angle_ankle_vertical(i)*180/pi;
-            
-            % elevation toe from the ground
-            Angle_toe_hor(i)=acos(dot(VectorANKLE_TOE(i,:),Horizontal)/(norm(VectorANKLE_TOE(i,:))*norm(Horizontal)));
-            S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).RightAngles.ToeElevAngle(i)=Angle_toe_hor(i)*180/pi;
-            
-        end
-    end
-end
 
 
 
