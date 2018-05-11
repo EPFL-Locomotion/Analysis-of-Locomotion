@@ -42,30 +42,8 @@ end
 
 %% Divide in gait cycles
 
-%divide gait cycle 
-%
-
-gait_cycle1=200;
-gait_cycle2=gait_cycle1+119;
-gait_cycle3=gait_cycle2+129;
-gait_cycle4=gait_cycle3+109;
-vector1=S6_NO_FLOAT.T_01.Raw.Kin.LHIP-S6_NO_FLOAT.T_01.Raw.Kin.LKNE;
 
 
-plot(vector1);
-hold on 
-scatter(100,vector1(100));
-hold on 
-scatter(gait_cycle1, vector1(gait_cycle1));
-hold on 
-scatter(gait_cycle2, vector1(gait_cycle2));
-hold on
-scatter(gait_cycle3, vector1(gait_cycle3));
-hold on
-scatter(gait_cycle4, vector1(gait_cycle4));
-
-%vector2=
-%vector3=
 
 
 
