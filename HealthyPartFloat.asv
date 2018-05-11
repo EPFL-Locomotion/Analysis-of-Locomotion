@@ -76,18 +76,15 @@ hold off;
 all_sensors={'LANK', 'LTOE', 'LHIP','LKNE','RANK', 'RTOE', 'RHIP', 'RKNE'};
 trials={'T_01', 'T_02', 'T_03'};
 
-for k=1:length(trials)
+for i=1:length(trials)
     
-    for i=1:length(all_sensors)
+    for j=1:length(alsensors)
     
-        S6_FLOAT.(trials{k}).Raw.Kin.(all_sensors{i})( all(~S6_FLOAT.(trials{k}).Raw.Kin.(all_sensors{i}),2), : ) = [];
-        
-        
-    end
+    
 end
 
 %             S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i})=S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i})(find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i})~=0));
-%            S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i})( all(~S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i}),2), : ) = [];
+           S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i})( all(~S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i}),2), : ) = [];
         
 
 %% split in cycles right T_01
@@ -194,7 +191,9 @@ for k=1:length(trials)
         for i=1:length(sensors_right)
             
             S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_right{i})=S6_FLOAT.(trials{k}).Raw.Kin.(sensors_right{i})(PosIC_right.(trials{k})(n):PosIC_right.(trials{k})(n+1),:);
-            
+            % eliminating some zeros values that will mess up everything
+            S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})=S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})(find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})~=0));
+           
         end
     end
 end
@@ -224,6 +223,9 @@ for k=1:length(trials)
     for i=1:length(PosIC_left.(trials{k}))-1
         for j=1:length(sensors)
             
+            % eliminating some zeros values that will mess up everything
+            S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})=S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})(find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})~=0));
+           
             % stance
             S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).Stance.(sensors{j})=find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})(:,3)==min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).(sensors{j})(:,3)))/100; 
             
@@ -269,7 +271,7 @@ for n=1:2
     
     for k=1:length(trials)
         
-        for j=1:length(PosIC_left.(trials{k}))-1
+        for j=1:length(numbers)
             
             for i=1:size(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).(sensors{n,1}),1)
                 
