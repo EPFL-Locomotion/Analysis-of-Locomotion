@@ -419,13 +419,13 @@ Bursts.Position.T_02.GaitCycles.Two.RMG=[100 711];
 Bursts.Position.T_02.GaitCycles.Three.RMG=[94 700];
 
 
-Bursts.Position.T_03.GaitCycles.One.LTA=[390 1805];
-Bursts.Position.T_03.GaitCycles.Two.LTA=[260 1773];
-Bursts.Position.T_03.GaitCycles.Three.LTA=[260 1773];
+Bursts.Position.T_03.GaitCycles.One.LTA=[94 804];
+Bursts.Position.T_03.GaitCycles.Two.LTA=[52 685];
+Bursts.Position.T_03.GaitCycles.Three.LTA=[40 664];
 
-Bursts.Position.T_03.GaitCycles.One.RMG=[535 1900];
-Bursts.Position.T_03.GaitCycles.Two.RMG=[458 1805];
-Bursts.Position.T_03.GaitCycles.Three.RMG=[260 1773];
+Bursts.Position.T_03.GaitCycles.One.RMG=[64 642];
+Bursts.Position.T_03.GaitCycles.Two.RMG=[100 655];
+Bursts.Position.T_03.GaitCycles.Three.RMG=[107 654];
 
 %%Calculation of EMG parameters
 for i=1:3

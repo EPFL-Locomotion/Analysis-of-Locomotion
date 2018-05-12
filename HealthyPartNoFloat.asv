@@ -147,7 +147,7 @@ end
 IC_left(1)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(1:150,3));
 IC_left(2)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(151:250,3));
 IC_left(3)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(251:400,3));
-IC_left(4)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(401:end,3));
+IC_left(4)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(401:500,3));
 
 for i=1:4
     
@@ -385,7 +385,7 @@ figure
             title(sprintf('Gait cycle %d - Sensor %s',i,EMGSensors{j}));
          end   
      end
-suptitle('Trial 2 - Raw');
+suptitle('Trial 3 - Raw');
 
 
 figure
@@ -419,9 +419,9 @@ Bursts.Position.T_02.GaitCycles.Two.RMG=[100 711];
 Bursts.Position.T_02.GaitCycles.Three.RMG=[94 700];
 
 
-Bursts.Position.T_03.GaitCycles.One.LTA=[390 1805];
-Bursts.Position.T_03.GaitCycles.Two.LTA=[260 1773];
-Bursts.Position.T_03.GaitCycles.Three.LTA=[260 1773];
+Bursts.Position.T_03.GaitCycles.One.LTA=[94 804];
+Bursts.Position.T_03.GaitCycles.Two.LTA=[52 685];
+Bursts.Position.T_03.GaitCycles.Three.LTA=[40 664];
 
 Bursts.Position.T_03.GaitCycles.One.RMG=[535 1900];
 Bursts.Position.T_03.GaitCycles.Two.RMG=[458 1805];
