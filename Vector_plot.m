@@ -1,3 +1,14 @@
+clear all
+close all
+clc
+
+% adding the paths and loading data
+
+addpath(genpath('Healthy Recordings\Subject6\FLOAT'));
+
+load('S6_FLOAT.mat');
+
+
 %
 Vector=zeros(4*size(S6_FLOAT.T_01.Raw.Kin.LHIP,1),3);
 
