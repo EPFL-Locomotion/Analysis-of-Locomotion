@@ -1,0 +1,100 @@
+clear all
+close all
+clc
+
+% adding the paths and loading data
+
+addpath(genpath('Separating into gait cycles'));
+addpath(genpath('SCI subject (updated file)\NO_FLOAT_CRUTCHES\MAT'));
+addpath(genpath('SCI subject (updated file)\NO_FLOAT_CRUTCHES\GAIT FILES'));
+addpath(fullfile('Separating into gait cycles')); 
+
+load('NO_FLOAT_CRUTCHES.mat');
+
+data1 = readtable('SCI_HCU_20150505_02OVGa_AD_01_GAIT.csv');
+data2 = readtable('SCI_HCU_20150505_02OVGa_AD_02_GAIT.csv');
+data3 = readtable('SCI_HCU_20150505_02OVGa_AD_03_GAIT.csv');
+
+%% Getting the StepPoints
+
+StepPoints.T_01.left=table2array(data1(1:8,4))*100;
+StepPoints.T_01.right=table2array(data1(18:25,4))*100;
+StepPoints.T_02.left=table2array(data2(1:7,4))*100;
+StepPoints.T_02.right=table2array(data2(16:23,4))*100;
+StepPoints.T_03.left=table2array(data3(1:8,4))*100;
+StepPoints.T_03.right=table2array(data3(16:24,4))*100;
+
+%% EMG filtering
+Trials=fieldnames(NO_FLOAT_CRUTCHES);
+Trials=Trials(9:11,1);
+
+for Trialidx=1:length(Trials)
+   TrialName=Trials{Trialidx}; 
+   EMGSensors=fieldnames(NO_FLOAT_CRUTCHES.(TrialName).Raw.EMG);
+   if isstruct(NO_FLOAT_CRUTCHES)
+    for Sensoridx=1:length(EMGSensors)
+        SensorName=EMGSensors{Sensoridx};
+        if isstruct(NO_FLOAT_CRUTCHES.(TrialName).Raw.EMG)
+            %4-th order band pass filter (10-499 Hz)
+            [bp1,bp2]=butter(4,[10 499]/(NO_FLOAT_CRUTCHES.(TrialName).fsEMG/2)); 
+            NO_FLOAT_CRUTCHES.(TrialName).Filtered.(SensorName)=filtfilt(bp1,bp2,NO_FLOAT_CRUTCHES.(TrialName).Raw.EMG.(SensorName));
+        
+            %rectification
+            NO_FLOAT_CRUTCHES.(TrialName).Rectified.(SensorName)=abs(NO_FLOAT_CRUTCHES.(TrialName).Filtered.(SensorName));
+
+            %4-th order Notch filter (50 Hz)
+            [n1,n2]=butter(4,[49.8 50.2]/(NO_FLOAT_CRUTCHES.(TrialName).fsEMG/2),'stop'); 
+            NO_FLOAT_CRUTCHES.(TrialName).Filtered3.(SensorName)=filtfilt(n1,n2,NO_FLOAT_CRUTCHES.(TrialName).Rectified.(SensorName));
+        
+            %4-th order low-pass filter (10 Hz)
+            [lp1,lp2]=butter(4,10/(NO_FLOAT_CRUTCHES.(TrialName).fsEMG/2),'low'); 
+            NO_FLOAT_CRUTCHES.(TrialName).Filtered4.(SensorName)=filtfilt(lp1,lp2,NO_FLOAT_CRUTCHES.(TrialName).Filtered3.(SensorName));
+        end
+    end
+   end
+end
+
+
+%% Eliminating some zeros values that will mess up everything
+
+all_sensors={'LANK', 'LTOE', 'LWRA','LKNE','RANK', 'RTOE', 'RWRA', 'RKNE'};
+trials={'T_01', 'T_02', 'T_03'};
+
+for k=1:length(trials)
+    
+    for i=1:length(all_sensors)
+    
+        NO_FLOAT_CRUTCHES.(trials{k}).Raw.Kin.(all_sensors{i})( all(~NO_FLOAT_CRUTCHES.(trials{k}).Raw.Kin.(all_sensors{i}),2), : ) = [];
+       
+    end
+end
+
+%% making struct for each cycles and sensor
+
+sensors_left={'LANK', 'LTOE', 'LWRA','LKNE'};
+numbers={'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'};
+trials={'T_01', 'T_02', 'T_03'};
+
+for k=1:length(trials)
+    for n=1:length(StepPoints.(trials{k}).left)-1
+        for i=1:length(sensors_left)
+            
+            NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{n}).Kin.(sensors_left{i})=NO_FLOAT_CRUTCHES.(trials{k}).Raw.Kin.(sensors_left{i})(StepPoints.(trials{k}).left(n):StepPoints.(trials{k}).left(n+1),:);
+        end
+    end
+end
+
+sensors_right={'RANK', 'RTOE', 'RWRA', 'RKNE'};
+numbers={'One', 'Two', 'Three', 'Four', 'Five', 'Six'};
+trials={'T_01', 'T_02', 'T_03'};
+
+for k=1:length(trials)
+    for n=1:length(StepPoints.(trials{k}).right)-1
+        for i=1:length(sensors_right)
+            
+            NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{n}).Kin.(sensors_right{i})=FLOAT_NO_CRUTCHES.(trials{k}).Raw.Kin.(sensors_right{i})(StepPoints.(trials{k}).right(n):StepPoints.(trials{k}).right(n+1),:);
+            
+        end
+    end
+end
+
