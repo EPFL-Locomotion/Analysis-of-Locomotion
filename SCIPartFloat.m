@@ -250,10 +250,12 @@ end
 
 figure
 for k=1:length(trials)
-     for i=1:4
-         subplot(3,4,4*(k-1)+i)
+    cont=1;
+     for i=[31,32,39,40]
+         subplot(3,4,4*(k-1)+cont)
          plot(FLOAT_NO_CRUTCHES.(trials{k}).Raw.EMG.(EMGSensors{i}));
          title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
+         cont=cont+1;
      end
 end
 suptitle('Raw signal');
@@ -261,44 +263,52 @@ suptitle('Raw signal');
 
 figure
 for k=1:length(trials)
-     for i=1:4
-         subplot(3,4,4*(k-1)+i)
+    cont=1; 
+    for i=[31,32,39,40]
+         subplot(3,4,4*(k-1)+cont)
          plot(FLOAT_NO_CRUTCHES.(trials{k}).Filtered.(EMGSensors{i}));
          title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
-     end
+         cont=cont+1;
+    end
 end
 suptitle('Filtered signal');
 
 
 figure
 for k=1:length(trials)
-     for i=1:4
-         subplot(3,4,4*(k-1)+i)
-         plot(FLOAT_NO_CRUTCHES.(trials{k}).Filtered4.(EMGSensors{i}));
-         title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
-     end
+    cont=1;
+    for i=[31,32,39,40]
+        subplot(3,4,4*(k-1)+cont)
+        plot(FLOAT_NO_CRUTCHES.(trials{k}).Filtered4.(EMGSensors{i}));
+        title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
+        cont=cont+1;
+    end
 end
 suptitle('Final filtered signal');
 
 
 %--
 figure
-     for j=2:3
-         for i=1:length(fieldnames(FLOAT_NO_CRUTCHES.(trials{3}).GaitCycles))
-            subplot(4,4,4*(j-1)+i)
-            plot(FLOAT_NO_CRUTCHES.(trials{3}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j}));
+     for i=1:length(fieldnames(FLOAT_NO_CRUTCHES.(trials{1}).GaitCycles))
+     cont=1;
+         for j=[32,39]
+            subplot(2,5,5*(cont-1)+i)
+            plot(FLOAT_NO_CRUTCHES.(trials{1}).GaitCycles.(numbers{i}).EMG.Filtered.(EMGSensors{j}));
             title(sprintf('Gait cycle %d - Sensor %s',i,EMGSensors{j}));
-         end   
-     end
-suptitle('Trial 3 - Raw');
+            cont=cont+1;
+         end
+      end
+suptitle('Trial 1 - Filtered');
 
 
 figure
-     for j=2:3
-         for i=1:length(fieldnames(FLOAT_NO_CRUTCHES.(trials{1}).GaitCycles))
-            subplot(4,4,4*(j-1)+i)
+     for i=1:length(fieldnames(FLOAT_NO_CRUTCHES.(trials{1}).GaitCycles))
+     cont=1;
+         for j=[32,39]
+            subplot(2,5,5*(cont-1)+i)
             plot(FLOAT_NO_CRUTCHES.(trials{1}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j}));
             title(sprintf('Gait cycle %d - Sensor %s',i,EMGSensors{j}));
+            cont=cont+1;
          end   
      end
 suptitle('Trial 1 - Final filtered');
