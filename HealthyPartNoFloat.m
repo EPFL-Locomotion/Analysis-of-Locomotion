@@ -147,7 +147,7 @@ end
 IC_left(1)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(1:150,3));
 IC_left(2)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(151:250,3));
 IC_left(3)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(251:400,3));
-IC_left(4)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(401:end,3));
+IC_left(4)=max(S6_NO_FLOAT.T_03.Raw.Kin.LTOE(401:500,3));
 
 for i=1:4
     
