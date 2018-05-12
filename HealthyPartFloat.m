@@ -395,14 +395,72 @@ suptitle('Final filtered signal');
 
 %--
 figure
-     for j=1:4
-         for i=1:length(fieldnames(S6_FLOAT.(trials{1}).GaitCycles))
+     for j=2:3
+         for i=1:length(fieldnames(S6_FLOAT.(trials{3}).GaitCycles))
             subplot(4,4,4*(j-1)+i)
-            plot(S6_FLOAT.(trials{1}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j}));
+            plot(S6_FLOAT.(trials{3}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j}));
             title(sprintf('Gait cycle %d - Sensor %s',i,EMGSensors{j}));
          end   
      end
-suptitle('Trial 1 - Raw');
+suptitle('Trial 3 - Raw');
 
 
+figure
+     for j=2:3
+         for i=1:length(fieldnames(S6_FLOAT.(trials{1}).GaitCycles))
+            subplot(4,4,4*(j-1)+i)
+            plot(S6_FLOAT.(trials{1}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j}));
+            title(sprintf('Gait cycle %d - Sensor %s',i,EMGSensors{j}));
+         end   
+     end
+suptitle('Trial 1 - Final filtered');
 
+
+%%Bursts calculation visually
+Bursts.Position.T_01.GaitCycles.One.LTA=[203 1353];
+Bursts.Position.T_01.GaitCycles.Two.LTA=[326 1793];
+Bursts.Position.T_01.GaitCycles.Three.LTA=[420 1621];
+Bursts.Position.T_01.GaitCycles.Four.LTA=[250 1588];
+
+Bursts.Position.T_01.GaitCycles.One.RMG=[563 2038];
+Bursts.Position.T_01.GaitCycles.Two.RMG=[560 1956];
+Bursts.Position.T_01.GaitCycles.Three.RMG=[390 1708];
+Bursts.Position.T_01.GaitCycles.Four.RMG=[410 1773];
+
+Bursts.Position.T_02.GaitCycles.One.LTA=[333 1650];
+Bursts.Position.T_02.GaitCycles.Two.LTA=[380 1837];
+Bursts.Position.T_02.GaitCycles.Three.LTA=[292 1429];
+
+Bursts.Position.T_02.GaitCycles.One.RMG=[337 1669];
+Bursts.Position.T_02.GaitCycles.Two.RMG=[453 1700];
+Bursts.Position.T_02.GaitCycles.Three.RMG=[500 1791];
+
+
+Bursts.Position.T_03.GaitCycles.One.LTA=[390 1805];
+Bursts.Position.T_03.GaitCycles.Two.LTA=[260 1773];
+
+Bursts.Position.T_03.GaitCycles.One.RMG=[535 1900];
+Bursts.Position.T_03.GaitCycles.Two.RMG=[458 1805];
+
+%%Calculation of EMG parameters
+for i=1:3
+    for j=1:length(fieldnames(S6_FLOAT.(trials{i}).GaitCycles))
+        for k=2:3
+            %Each burst falls between two gait cycles, i.e. each gait
+            %cycles has two half-bursts (one at the beginning and one at
+            %the end)
+            end1burst=Bursts.Position.(trials{i}).GaitCycles.(numbers{j}).(EMGSensors{k})(1);%end of the first half-burst
+            start2burst=Bursts.Position.(trials{i}).GaitCycles.(numbers{j}).(EMGSensors{k})(2);%start of the second half-burst
+            lengthburst=length(S6_FLOAT.(trials{i}).GaitCycles.(numbers{j}).EMG.Raw.(EMGSensors{k}));
+        
+            %Duration in seconds (i.e. divided by 1000), i.e. how much of the gait cycle is burst
+            Bursts.Duration.(trials{i}).GaitCycles.(numbers{j}).(EMGSensors{k})=0.001*(end1burst-1+lengthburst-start2burst);
+        
+            %Max value of the burst (in the final filtered signal) in the gait cycle
+            Bursts.MaxValue.(trials{i}).GaitCycles.(numbers{j}).(EMGSensors{k})=max(S6_FLOAT.(trials{i}).GaitCycles.(numbers{j}).EMG.Filtered4.(EMGSensors{k}));
+            
+            %Mean value of the burst (in the final filtered signal) in the gait cycle
+            Bursts.MeanValue.(trials{i}).GaitCycles.(numbers{j}).(EMGSensors{k})=mean(S6_FLOAT.(trials{i}).GaitCycles.(numbers{j}).EMG.Filtered4.(EMGSensors{k})([1:end1burst,start2burst:lengthburst]));
+        end
+    end
+end
