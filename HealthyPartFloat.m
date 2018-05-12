@@ -359,9 +359,50 @@ for k=1:length(trials)
      end
 end
 
+
+figure
 for k=1:length(trials)
      for i=1:4
-          S6_FLOAT.(trials{k}).Raw.EMG.(EMGSensorsRight{i})=S6_FLOAT.(trials{k}).Raw.EMG.(EMGSensorsRight{i})((10*PosIC_right.(trials{k})(j)):(10*PosIC_right.(trials{k})(j+1)-1));
+         subplot(3,4,4*(k-1)+i)
+         plot(S6_FLOAT.(trials{k}).Raw.EMG.(EMGSensors{i}));
+         title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
      end
 end
+suptitle('Raw signal');
+
+
+figure
+for k=1:length(trials)
+     for i=1:4
+         subplot(3,4,4*(k-1)+i)
+         plot(S6_FLOAT.(trials{k}).Filtered.(EMGSensors{i}));
+         title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
+     end
+end
+suptitle('Filtered signal');
+
+
+figure
+for k=1:length(trials)
+     for i=1:4
+         subplot(3,4,4*(k-1)+i)
+         plot(S6_FLOAT.(trials{k}).Filtered4.(EMGSensors{i}));
+         title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
+     end
+end
+suptitle('Final filtered signal');
+
+
+%--
+figure
+     for j=1:4
+         for i=1:length(fieldnames(S6_FLOAT.(trials{1}).GaitCycles))
+            subplot(4,4,4*(j-1)+i)
+            plot(S6_FLOAT.(trials{1}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j}));
+            title(sprintf('Gait cycle %d - Sensor %s',i,EMGSensors{j}));
+         end   
+     end
+suptitle('Trial 1 - Raw');
+
+
 

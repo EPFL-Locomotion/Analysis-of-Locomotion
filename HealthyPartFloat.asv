@@ -319,6 +319,7 @@ EMGType={'Filtered','Rectified','Filtered3','Filtered4'};
 EMGSensorsLeft={'LMG','LTA'};
 EMGSensorsRight={'RMG','RTA'};
 
+
 %divide into gait cycles - left
 for k=1:length(trials)
      for j=1:length(PosIC_left.(trials{k}))-1
@@ -357,5 +358,51 @@ for k=1:length(trials)
          end
      end
 end
+
+
+figure
+for k=1:length(trials)
+     for i=1:4
+         subplot(3,4,4*(k-1)+i)
+         plot(S6_FLOAT.(trials{k}).Raw.EMG.(EMGSensors{i}));
+         title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
+     end
+end
+suptitle('Raw signal');
+
+
+figure
+for k=1:length(trials)
+     for i=1:4
+         subplot(3,4,4*(k-1)+i)
+         plot(S6_FLOAT.(trials{k}).Filtered.(EMGSensors{i}));
+         title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
+     end
+end
+suptitle('Filtered signal');
+
+
+figure
+for k=1:length(trials)
+     for i=1:4
+         subplot(3,4,4*(k-1)+i)
+         plot(S6_FLOAT.(trials{k}).Filtered4.(EMGSensors{i}));
+         title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
+     end
+end
+suptitle('Final filtered signal');
+
+
+%--
+figure
+for k=1:length(trials)
+     for i=1:GaitCycles
+         subplot(3,4,4*(k-1)+i)
+         plot(S6_FLOAT.(trials{k}).GaitCycleFiltered4.(EMGSensors{i}));
+         title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
+     end
+end
+suptitle('Final filtered signal');
+
 
 
