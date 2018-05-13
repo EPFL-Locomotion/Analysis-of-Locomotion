@@ -21,7 +21,17 @@ for i=1:size(fieldnames(FeaturesSCINoFloat),1)-6
 end
 
 
-[coeff,score,variance]=pca(zscore(PCAKinMatrix));
+[coeff,score,variance,~,explain]=pca(zscore(PCAKinMatrix));
+figure;
+bar(explain);
+title('Principal Component explaning variances');
+xlabel('Principal Components');
+ylabel('Explain Variance');
+grid on
+
+% we see that the 3 principal component are able to
+% explain:sum(explain(1:3))=77% of total variance)
+
 [sorted_coeff1P, sorting_value1P] = sort(abs(coeff(:,1)),'descend');
 SortedFeatures = NumbFeatures(sorting_value1P);
 figure
@@ -31,9 +41,44 @@ xticklabels(SortedFeatures(1));
 title({'Loadings of the 1st principal component (sorted)'});
 xlabel('Features');
 
+%% plot
+%%rappresention in 3D
+i=1;
+
+Size1=size(FeaturesSCINoFloat.(NumbFeatures{i}),1);
+Size2=size(FeaturesSCIFloat.(NumbFeatures{i}),1);
+Size3=size(FeaturesHealthyFloat.(NumbFeatures{i}),1);
+Size4=size(FeaturesHealthyNoFloat.(NumbFeatures{i}),1);
+
+figure;
+scatter3(score(1:Size1,1),score(1:Size1,2),score(1:Size1,3),'filled');
+hold on
+scatter3(score(Size1:Size1+Size2,1),score(Size1:Size1+Size2,2),score(Size1:Size1+Size2,3),'filled');
+hold on
+scatter3(score(Size1+Size2:Size1+Size2+Size3,1),score(Size1+Size2:Size1+Size2+Size3,2),score(Size1+Size2:Size1+Size2+Size3,3),'filled');
+hold on
+scatter3(score(Size1+Size2+Size3:Size1+Size2+Size3+Size4,1),score(Size1+Size2+Size3:Size1+Size2+Size3+Size4,2),score(Size1+Size2+Size3:Size1+Size2+Size3+Size4,3),'filled');
+xlabel('1PC');
+ylabel('2PC');
+zlabel('3PC');
+legend('SCINoFloat','SCIFloat','HealthyFloat','HealthyNoFloat');
 
 
-%% PCA Kinematics plus emg (54*33)
+%%rappresenation in 2D
+
+figure;
+scatter(score(1:Size1,1),score(1:Size1,2),'filled');
+hold on
+scatter(score(Size1:Size1+Size2,1),score(Size1:Size1+Size2,2),'filled');
+hold on
+scatter(score(Size1+Size2:Size1+Size2+Size3,1),score(Size1+Size2:Size1+Size2+Size3,2),'filled');
+hold on
+scatter(score(Size1+Size2+Size3:Size1+Size2+Size3+Size4,1),score(Size1+Size2+Size3:Size1+Size2+Size3+Size4,2),'filled');
+xlabel('1PC');
+ylabel('2PC');
+legend('SCINoFloat','SCIFloat','HealthyFloat','HealthyNoFloat');
+
+%% PCA Kinematics plus emg (54*35)
 
 
 
@@ -44,12 +89,50 @@ for i=1:size(fieldnames(FeaturesSCINoFloat),1)
 end
 
 
-[coeff_EMG,score_EMG,variance_EMG]=pca(zscore(PCAEMGKinMatrix));
+[coeff_EMG,score_EMG,variance_EMG,~,explainEMG]=pca(zscore(PCAEMGKinMatrix));
+figure;
+bar(explainEMG);
+title('Principal Component explaning variances');
+xlabel('Principal Components');
+ylabel('Explain Variance');
+grid on
+% we see that the 3 principal component are able to
+% explain:sum(explainEMG(1:3))=74% of total variance)
+
 [sorted_coeff1PEMG, sorting_value1PEMG] = sort(abs(coeff_EMG(:,1)),'descend');
 SortedFeaturesEMG = NumbFeatures(sorting_value1PEMG);
 figure
 bar(sorted_coeff1PEMG);
-xticks(1:29);
+xticks(1:35);
 xticklabels(SortedFeaturesEMG(1));
 title({'Loadings of the 1st principal component (sorted)'});
 xlabel('Features');
+
+%% plot
+figure;
+scatter3(score_EMG(1:Size1,1),score_EMG(1:Size1,2),score_EMG(1:Size1,3),'filled');
+hold on
+scatter3(score_EMG(Size1:Size1+Size2,1),score_EMG(Size1:Size1+Size2,2),score_EMG(Size1:Size1+Size2,3),'filled');
+hold on
+scatter3(score_EMG(Size1+Size2:Size1+Size2+Size3,1),score_EMG(Size1+Size2:Size1+Size2+Size3,2),score_EMG(Size1+Size2:Size1+Size2+Size3,3),'filled');
+hold on
+scatter3(score_EMG(Size1+Size2+Size3:Size1+Size2+Size3+Size4,1),score_EMG(Size1+Size2+Size3:Size1+Size2+Size3+Size4,2),score_EMG(Size1+Size2+Size3:Size1+Size2+Size3+Size4,3),'filled');
+xlabel('1PC');
+ylabel('2PC');
+zlabel('3PC');
+legend('SCINoFloat','SCIFloat','HealthyFloat','HealthyNoFloat');
+
+
+%%rappresenation in 2D
+
+figure;
+scatter(score_EMG(1:Size1,1),score_EMG(1:Size1,2),'filled');
+hold on
+scatter(score(Size1:Size1+Size2,1),score_EMG(Size1:Size1+Size2,2),'filled');
+hold on
+scatter(score_EMG(Size1+Size2:Size1+Size2+Size3,1),score_EMG(Size1+Size2:Size1+Size2+Size3,2),'filled');
+hold on
+scatter(score_EMG(Size1+Size2+Size3:Size1+Size2+Size3+Size4,1),score(Size1+Size2+Size3:Size1+Size2+Size3+Size4,2),'filled');
+xlabel('1PC');
+ylabel('2PC');
+legend('SCINoFloat','SCIFloat','HealthyFloat','HealthyNoFloat');
