@@ -385,16 +385,15 @@ for k=1:length(trials)
     for i=1:length(fieldnames(FLOAT_NO_CRUTCHES.(trials{k}).GaitCycles))
          for j=32%[32,39]
             %Assumption#1.1: for LTA between 500 and 600 it is always noise
-            %Assumption#1.2: we put a higher and a lower limit for 2*std
+            %Assumption#1.2: we put a higher limit for 2*std
             clear StdNoise;
             clear indeces;
             StdNoise=min([std(FLOAT_NO_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(500:600)),0.0375/2]);
-            StdNoise=max([StdNoise,0.01/2]);
             indeces=find(FLOAT_NO_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise));
-            %Assumption#2: minimum burst length is 300
+            %Assumption#2: minimum burst length is 350
             Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=[];
             for l=1:(length(indeces)-1)
-               if (indeces(l+1)-indeces(l)>300)  
+               if (indeces(l+1)-indeces(l)>350)  
                   Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=cat(1,Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}),indeces(l),indeces(l+1)); 
                end
             end
@@ -429,15 +428,15 @@ for k=1:length(trials)
     for i=1:length(fieldnames(FLOAT_NO_CRUTCHES.(trials{k}).GaitCycles))
          for j=39%[32,39]
             %Assumption#1.1: for LTA between 1750 and 1850 it is always noise
-            %Assumption#1.2: we put a higher and a lower limit for 2*std
+            %Assumption#1.2: we put a higher limit for 2*std
             clear StdNoise;
             clear indeces;
             StdNoise=min([std(FLOAT_NO_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(1750:1850)),0.0375/2]);
             indeces=find(FLOAT_NO_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise));
-            %Assumption#2: minimum burst length is 300
+            %Assumption#2: minimum burst length is 350
             Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=[];
             for l=1:(length(indeces)-1)
-               if (indeces(l+1)-indeces(l)>300)  
+               if (indeces(l+1)-indeces(l)>350)  
                   Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=cat(1,Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}),indeces(l),indeces(l+1)); 
                end
             end

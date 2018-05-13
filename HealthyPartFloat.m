@@ -494,7 +494,6 @@ for k=1:length(trials)
             clear StdNoise;
             clear indeces;
             StdNoise=min([std(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(750:1250)),0.0375/2]);
-            %StdNoise=max([StdNoise,0.01/2]);
             indeces=find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise));
             %Assumption#2: minimum burst length is 350
             Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=[];
