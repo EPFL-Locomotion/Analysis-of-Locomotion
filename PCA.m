@@ -41,6 +41,13 @@ xticklabels(SortedFeatures(1));
 title({'Loadings of the 1st principal component (sorted)'});
 xlabel('Features');
 
+figure;
+imagesc(coeff(:,1));
+cb=colorbar;
+title('correlation variables');
+yticks(1:29);
+yticklabels(SortedFeatures);
+xlabel('1PC');
 %% plot
 %%rappresention in 3D
 i=1;
@@ -108,6 +115,15 @@ xticklabels(SortedFeaturesEMG(1));
 title({'Loadings of the 1st principal component (sorted)'});
 xlabel('Features');
 
+
+
+figure;
+imagesc(coeff_EMG(:,1));
+cb=colorbar;
+title('correlation variables');
+yticks(1:35);
+yticklabels(SortedFeaturesEMG);
+xlabel('1PC');
 %% plot
 figure;
 scatter3(score_EMG(1:Size1,1),score_EMG(1:Size1,2),score_EMG(1:Size1,3),'filled');
