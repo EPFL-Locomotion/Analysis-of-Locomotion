@@ -1,12 +1,10 @@
-clear all
-close all
-clc
+function [Features]=SCIPartNoFloat(Kinfreq,EMGfreq)
 
 % adding the paths and loading data
 
 addpath(genpath('Separating into gait cycles'));
-addpath(genpath('SCI subject (updated file)\NO_FLOAT_CRUTCHES\MAT'));
-addpath(genpath('SCI subject (updated file)\NO_FLOAT_CRUTCHES\GAIT FILES'));
+addpath(genpath('SCI subject (updated file)/NO_FLOAT_CRUTCHES/MAT'));
+addpath(genpath('SCI subject (updated file)/NO_FLOAT_CRUTCHES/GAIT FILES'));
 addpath(fullfile('Separating into gait cycles')); 
 
 load('NO_FLOAT_CRUTCHES.mat');
@@ -17,12 +15,12 @@ data3 = readtable('SCI_HCU_20150505_02OVGa_AD_03_GAIT.csv');
 
 %% Getting the StepPoints
 
-StepPoints.T_01.left=table2array(data1(1:8,4))*100;
-StepPoints.T_01.right=table2array(data1(18:25,4))*100;
-StepPoints.T_02.left=table2array(data2(1:8,4))*100;
-StepPoints.T_02.right=table2array(data2(16:23,4))*100;
-StepPoints.T_03.left=table2array(data3(1:8,4))*100;
-StepPoints.T_03.right=table2array(data3(16:23,4))*100;
+StepPoints.T_01.left=table2array(data1(1:8,4))*Kinfreq;
+StepPoints.T_01.right=table2array(data1(18:25,4))*Kinfreq;
+StepPoints.T_02.left=table2array(data2(1:8,4))*Kinfreq;
+StepPoints.T_02.right=table2array(data2(16:23,4))*Kinfreq;
+StepPoints.T_03.left=table2array(data3(1:8,4))*Kinfreq;
+StepPoints.T_03.right=table2array(data3(16:23,4))*Kinfreq;
 
 %% EMG filtering
 Trials=fieldnames(NO_FLOAT_CRUTCHES);
@@ -112,11 +110,11 @@ for k=1:length(trials)
         for j=1:length(sensors)
             
             % stance
-            NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.Stance.(sensors{j})=find(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(:,3)==min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(:,3)))/100; 
+            NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.Stance.(sensors{j})=find(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(:,3)==min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(:,3)))/Kinfreq; 
             
             % swing
             A=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j});
-            NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.Swing.(sensors{j})=(find(A(:,3)==max(A(150:end,3)))-find(A(:,3)==min(A(100:end,3))))/100;
+            NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.Swing.(sensors{j})=(find(A(:,3)==max(A(150:end,3)))-find(A(:,3)==min(A(Kinfreq:end,3))))/Kinfreq;
 
             % max toe step height
             NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.StepHeight.(sensors{j})=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(:,3));
@@ -205,8 +203,8 @@ end
 
 
 
-Features.CadenceL=[(120./(diff(StepPoints.T_01.left)/100));(120./(diff(StepPoints.T_02.left)/100));(120./(diff(StepPoints.T_03.left)/100))];
-Features.CadenceR=[120./(diff(StepPoints.T_01.right)/100);120./(diff(StepPoints.T_02.right)/100);120./(diff(StepPoints.T_03.right)/100)];
+Features.CadenceL=[(120./(diff(StepPoints.T_01.left)/Kinfreq));(120./(diff(StepPoints.T_02.left)/Kinfreq));(120./(diff(StepPoints.T_03.left)/Kinfreq))];
+Features.CadenceR=[120./(diff(StepPoints.T_01.right)/Kinfreq);120./(diff(StepPoints.T_02.right)/Kinfreq);120./(diff(StepPoints.T_03.right)/Kinfreq)];
 
 l=0;
 for k=1:length(trials)
@@ -489,7 +487,7 @@ end
 % Bursts.Position.T_02.GaitCycles.Three.LTA=[110 710];
 % 
 % Bursts.Position.T_02.GaitCycles.One.RMG=[86 750];
-% Bursts.Position.T_02.GaitCycles.Two.RMG=[100 711];
+% Bursts.Position.T_02.GaitCycles.Two.RMG=[Kinfreq 711];
 % Bursts.Position.T_02.GaitCycles.Three.RMG=[94 700];
 % 
 % 
@@ -540,4 +538,6 @@ Features.MeanAmplitudeBurstRGM(j+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(n
         
     end
     l=l+j;
+end
+
 end

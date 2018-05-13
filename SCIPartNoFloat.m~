@@ -5,8 +5,8 @@ clc
 % adding the paths and loading data
 
 addpath(genpath('Separating into gait cycles'));
-addpath(genpath('SCI subject (updated file)\NO_FLOAT_CRUTCHES\MAT'));
-addpath(genpath('SCI subject (updated file)\NO_FLOAT_CRUTCHES\GAIT FILES'));
+addpath(genpath('SCI subject (updated file)/NO_FLOAT_CRUTCHES\MAT'));
+addpath(genpath('SCI subject (updated file)NO_FLOAT_CRUTCHES\GAIT FILES'));
 addpath(fullfile('Separating into gait cycles')); 
 
 load('NO_FLOAT_CRUTCHES.mat');
@@ -385,16 +385,15 @@ for k=1:length(trials)
     for i=1:length(fieldnames(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles))
          for j=16%[16,23]
             %Assumption#1.1: for LTA between 1350 and 1450 it is always noise
-            %Assumption#1.2: we put a higher and a lower limit for 2*std
+            %Assumption#1.2: we put a higher limit for 2*std
             clear StdNoise;
             clear indeces;
             StdNoise=min([std(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(1350:1450)),0.0375/2]);
-            StdNoise=max([StdNoise,0.01/2]);
             indeces=find(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise));
-            %Assumption#2: minimum burst length is 300
+            %Assumption#2: minimum burst length is 350
             Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=[];
             for l=1:(length(indeces)-1)
-               if (indeces(l+1)-indeces(l)>300)  
+               if (indeces(l+1)-indeces(l)>350)  
                   Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=cat(1,Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}),indeces(l),indeces(l+1)); 
                end
             end
@@ -429,15 +428,15 @@ for k=1:length(trials)
     for i=1:length(fieldnames(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles))
          for j=23%[16,23]
             %Assumption#1.1: for LTA between 2350 and 2450 it is always noise
-            %Assumption#1.2: we put a higher and a lower limit for 2*std
+            %Assumption#1.2: we put a higher limit for 2*std
             clear StdNoise;
             clear indeces;
             StdNoise=min([std(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(2350:2450)),0.0375/2]);
             indeces=find(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise));
-            %Assumption#2: minimum burst length is 300
+            %Assumption#2: minimum burst length is 350
             Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=[];
             for l=1:(length(indeces)-1)
-               if (indeces(l+1)-indeces(l)>300)  
+               if (indeces(l+1)-indeces(l)>350)  
                   Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=cat(1,Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}),indeces(l),indeces(l+1)); 
                end
             end
@@ -532,12 +531,12 @@ for k=1:length(trials)
     for j=1:length(StepPoints.(trials{k}).left)-1
            
 
-Features.DurationBurstLTA(k+l,1)=Bursts.Duration.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
-Features.DurationBurstRGM(k+l,1)=Bursts.Duration.(trials{i}).GaitCycles.(numbers{j}).(EMGSensors{23});
-Features.MaxAmplitudeBurstLTA(k+l,1)=Bursts.MaxValue.(trials{}).GaitCycles.(numbers{j}).(EMGSensors{16})
-Features.MaxAmplitudeBurstRGM(k+l,1)=Bursts.MaxValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23})
-Features.MeanAmplitudeBurstLTA(k+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
-Features.MeanAmplitudeBurstRGM(k+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23});
+Features.DurationBurstLTA(j+l,1)=Bursts.Duration.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
+Features.DurationBurstRGM(j+l,1)=Bursts.Duration.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23});
+Features.MaxAmplitudeBurstLTA(j+l,1)=Bursts.MaxValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
+Features.MaxAmplitudeBurstRGM(j+l,1)=Bursts.MaxValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23});
+Features.MeanAmplitudeBurstLTA(j+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
+Features.MeanAmplitudeBurstRGM(j+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23});
         
     end
     l=l+j;

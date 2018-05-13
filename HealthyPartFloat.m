@@ -1,10 +1,7 @@
-clear all
-close all
-clc
-
+function [Features]=HealthyPartFloat(Kinfreq,EMGfreq)
 % adding the paths and loading data
 
-addpath(genpath('Healthy Recordings\Subject6\FLOAT'));
+addpath(genpath('Healthy Recordings/Subject6/FLOAT'));
 
 load('S6_FLOAT.mat');
 
@@ -640,4 +637,5 @@ Features.MeanAmplitudeBurstRGM(j+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(n
         
     end
     l=l+j;
+end
 end

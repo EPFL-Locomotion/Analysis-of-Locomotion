@@ -1,11 +1,9 @@
-clear all
-close all
-clc
+function [Features]=HealthyPartNoFloat(Kinfreq,EMGfreq)
 
 % adding the paths and loading data
 
 addpath(genpath('Separating into gait cycles'));
-addpath(genpath('Healthy Recordings\Subject6\NO_FLOAT'));
+addpath(genpath('Healthy Recordings/Subject6/NO_FLOAT'));
 addpath(fullfile('Separating into gait cycles')); 
 
 load('S6_NO_FLOAT.mat');
@@ -337,8 +335,8 @@ Features.JointAngleKneeRmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbe
 Features.JointAngleKneeLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeJointAngle);
 Features.JointAngleKneeRmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeJointAngle);
 
-Features.ElevationKneeLmax(j+l)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeElevAngle);
-Features.ElevationKneeRmax(j+l)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
+Features.ElevationKneeLmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeElevAngle);
+Features.ElevationKneeRmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
 
 Features.ElevationKneeLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeElevAngle);
 Features.ElevationKneeLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
@@ -626,7 +624,7 @@ Features.MeanAmplitudeBurstRGM(j+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(n
     end
     l=l+j;
 end
-
+end
 
 
 

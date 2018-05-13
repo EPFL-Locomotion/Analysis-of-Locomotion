@@ -1,79 +1,43 @@
 %% PCA-Kinematics
+%the total matrix is the following:
+
+%Healthy_Float subject: matrix(9*29);
+%Healthy_NO_Float subject: matrix(10*29);
+%SCI_FLOAT subject: matrix(14*29);
+%NO_SCI_FLOAT subject: matrix(21*29);
 
 
+%% PCA-Kinematics (54*29)
+[FeaturesSCINoFloat]=SCIPartNoFloat(100,1000);
+[FeaturesSCIFloat]=SCIPartFloat(100,1000);
+[FeaturesHealthyFloat]=HealthyPartFloat(100,1000);
+[FeaturesHealthyNoFloat]=HealthyPartNoFloat(100,1000);
+NumbFeatures=(fieldnames(FeaturesSCINoFloat));
 
+for i=1:size(fieldnames(FeaturesSCINoFloat),1)-6
 
+    PCAKinMatrix(:,i)=[FeaturesSCINoFloat.(NumbFeatures{i});FeaturesSCIFloat.(NumbFeatures{i});FeaturesHealthyFloat.(NumbFeatures{i});FeaturesHealthyNoFloat.(NumbFeatures{i})];
 
-all_sensors={'LANK', 'LTOE', 'LHIP','LKNE','RANK', 'RTOE', 'RHIP', 'RKNE'};
-numbers={'One', 'Two', 'Three', 'Four'};
-trials={'T_01', 'T_02', 'T_03'};
-
-Features.CadenceL=[(120./(diff(PosIC_left.T_01)/100)),(120./(diff(PosIC_left.T_02)/100)),(120./(diff(PosIC_left.T_03)/100))]';
-Features.CadenceR=[120./(diff(PosIC_right.T_01)/100),120./(diff(PosIC_right.T_03)/100),120./(diff(PosIC_right.T_03)/100)]';
-
-l=0;
-for k=1:length(trials)
-    for j=1:length(PosIC_left.(trials{k}))-1
-            
-   
-Features.StanceL(j+l)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Stance.(all_sensors{2});
-Features.StanceR(j+l)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Stance.(all_sensors{6});
-
-Features.SwingL(j+l)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Swing.(all_sensors{2});
-Features.SwingR(j+l)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Swing.(all_sensors{6});
-
-Features.StepHeightL(j+l)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{2});
-Features.StepHeightR(j+l)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{6});
-
-Features.KneeHeightL(j+l)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.KneeHeight.(all_sensors{4});
-Features.KneeHeightR(j+l)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.KneeHeight.(all_sensors{8});
-
-Features.HipAngleLmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.HipAngle);
-Features.HipAngleRmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.HipAngle);
-
-Features.HipAngleLmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.HipAngle);
-Features.HipAngleRmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.HipAngle);
-
-Features.JointAngleKneeLmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeJointAngle);
-Features.JointAngleKneeRmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeJointAngle);
-
-Features.JointAngleKneeLmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeJointAngle);
-Features.JointAngleKneeRmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeJointAngle);
-
-Features.ElevationKneeLmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeElevAngle);
-Features.ElevationKneeRmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
-
-Features.ElevationKneeLmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeElevAngle);
-Features.ElevationKneeLmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
-
-Features.JointAngleAnkleLmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleJointAngle);
-Features.JointAngleAnkleRmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleJointAngle);
-
-Features.JointAngleAnkleLmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleJointAngle);
-Features.JointAngleAnkleRmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleJointAngle);
-
-Features.JointAngleAnkleLmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleElevAngle);
-Features.JointAngleAnkleLmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleElevAngle);
-
-Features.JointAngleAnkleLmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleElevAngle);
-Features.JointAngleAnkleLmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleElevAngle);
-
-Features.ElevationToeLmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.ToeElevAngle);
-Features.ElevationToeRmax(j+l)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.ToeElevAngle);
-
-Features.ElevationToeLmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.ToeElevAngle);
-Features.ElevationToeRmin(j+l)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.ToeElevAngle);
-
-
-    end
- l=l+j;   
 end
 
 
+[coeff,score,variance]=pca(zscore(PCAKinMatrix));
+[sorted_coeff1P, sorting_value1P] = sort(abs(coeff(:,1)),'descend');
+sorted_var_names1 = varNames(sorting_protocol1);
+figure
+bar(sorted_coef1);
+xticks(1:28);
+xticklabels(sorted_var_names1);
+xtickangle(90);
+title({'Loadings of the 1st principal component (sorted)'});
+xlabel('Variables');
 
-%% PCA
+[value(2),ind]=max(abs(data_z(:,1)))
 
-%Healthy_Float subject: matrix(9*29)
-%% PCA-Kinematics+EEG
+%% PCA Kinematics plus emg (54*33)
 
 
+for i=1:size(fieldnames(FeaturesSCINoFloat),1) %number of features
+
+
+PCAEmgMatrix=
