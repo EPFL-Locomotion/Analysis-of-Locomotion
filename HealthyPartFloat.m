@@ -465,40 +465,41 @@ suptitle('Final filtered signal');
 %--
 figure
      for j=2:3
-         for i=1:length(fieldnames(S6_FLOAT.(trials{3}).GaitCycles))
+         for i=1:length(fieldnames(S6_FLOAT.(trials{1}).GaitCycles))
             subplot(4,4,4*(j-1)+i)
-            plot(S6_FLOAT.(trials{3}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j}));
+            plot(S6_FLOAT.(trials{1}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j}));
             title(sprintf('Gait cycle %d - Sensor %s',i,EMGSensors{j}));
          end   
      end
-suptitle('Trial 3 - Raw');
+suptitle('Trial 1 - Raw');
 
 
 figure
      for j=2:3
-         for i=1:length(fieldnames(S6_FLOAT.(trials{1}).GaitCycles))
+         for i=1:length(fieldnames(S6_FLOAT.(trials{3}).GaitCycles))
             subplot(4,4,4*(j-1)+i)
-            plot(S6_FLOAT.(trials{1}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j}));
+            plot(S6_FLOAT.(trials{3}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j}));
             title(sprintf('Gait cycle %d - Sensor %s',i,EMGSensors{j}));
          end   
      end
-suptitle('Trial 1 - Final filtered');
+suptitle('Trial 3 - Final filtered');
 
+%% BURSTS CALCULATION FROM STD
 %---LTA
 for k=1:length(trials)
     for i=1:length(fieldnames(S6_FLOAT.(trials{k}).GaitCycles))
          for j=2%[2,3]
-            %Assumption#1.1: for LTA between 350 and 600 it is always noise
-            %Assumption#1.2: we put a higher and a lower limit for 2*std
+            %Assumption#1.1: for LTA between 750 and 1250 it is always noise
+            %Assumption#1.2: we put a higher limit for 2*std
             clear StdNoise;
             clear indeces;
-            StdNoise=min([std(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(350:600)),0.0375/2]);
-            StdNoise=max([StdNoise,0.01/2]);
+            StdNoise=min([std(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(750:1250)),0.0375/2]);
+            %StdNoise=max([StdNoise,0.01/2]);
             indeces=find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise));
-            %Assumption#2: minimum burst length is 300
+            %Assumption#2: minimum burst length is 350
             Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=[];
             for l=1:(length(indeces)-1)
-               if (indeces(l+1)-indeces(l)>300)  
+               if (indeces(l+1)-indeces(l)>350)  
                   Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=cat(1,Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}),indeces(l),indeces(l+1)); 
                end
             end
@@ -532,16 +533,16 @@ end
 for k=1:length(trials)
     for i=1:length(fieldnames(S6_FLOAT.(trials{k}).GaitCycles))
          for j=3%[2,3]
-            %Assumption#1.1: for LTA between 350 and 600 it is always noise
-            %Assumption#1.2: we put a higher and a lower limit for 2*std
+            %Assumption#1.1: for LTA between 750 and 1250 it is always noise
+            %Assumption#1.2: we put a higher limit for 2*std
             clear StdNoise;
             clear indeces;
-            StdNoise=min([std(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(350:600)),0.0375/2]);
+            StdNoise=min([std(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(750:1250)),0.0375/2]);
             indeces=find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise));
-            %Assumption#2: minimum burst length is 300
+            %Assumption#2: minimum burst length is 350
             Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=[];
             for l=1:(length(indeces)-1)
-               if (indeces(l+1)-indeces(l)>300)  
+               if (indeces(l+1)-indeces(l)>350)  
                   Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=cat(1,Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}),indeces(l),indeces(l+1)); 
                end
             end
