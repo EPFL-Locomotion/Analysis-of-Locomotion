@@ -297,6 +297,74 @@ for n=1:2
     end
 end
 
+%% ALL FEATURES INTO A MATRIX
+
+%Healthy_NOFloat subject: matrix(10*29)
+
+all_sensors={'LANK', 'LTOE', 'LHIP','LKNE','RANK', 'RTOE', 'RHIP', 'RKNE'};
+numbers={'One', 'Two', 'Three', 'Four'};
+trials={'T_01', 'T_02', 'T_03'};
+
+Features.CadenceL=[(120./(diff(PosIC_left.T_01)/100)),(120./(diff(PosIC_left.T_02)/100)),(120./(diff(PosIC_left.T_03)/100))]';
+Features.CadenceR=[120./(diff(PosIC_right.T_01)/100),120./(diff(PosIC_right.T_02)/100),120./(diff(PosIC_right.T_03)/100)]';
+
+l=0;
+for k=1:length(trials)
+    for j=1:length(PosIC_left.(trials{k}))-1
+            
+   
+Features.StanceL(j+l,1)=S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Stance.(all_sensors{2});
+Features.StanceR(j+l,1)=S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Stance.(all_sensors{6});
+
+Features.SwingL(j+l,1)=S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Swing.(all_sensors{2});
+Features.SwingR(j+l,1)=S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Swing.(all_sensors{6});
+
+Features.StepHeightL(j+l,1)=S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{2});
+Features.StepHeightR(j+l,1)=S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{6});
+
+Features.KneeHeightL(j+l,1)=S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.KneeHeight.(all_sensors{4});
+Features.KneeHeightR(j+l,1)=S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.KneeHeight.(all_sensors{8});
+
+Features.HipAngleLmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.HipAngle);
+Features.HipAngleRmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.HipAngle);
+
+Features.HipAngleLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.HipAngle);
+Features.HipAngleRmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.HipAngle);
+
+Features.JointAngleKneeLmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeJointAngle);
+Features.JointAngleKneeRmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeJointAngle);
+
+Features.JointAngleKneeLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeJointAngle);
+Features.JointAngleKneeRmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeJointAngle);
+
+Features.ElevationKneeLmax(j+l)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeElevAngle);
+Features.ElevationKneeRmax(j+l)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
+
+Features.ElevationKneeLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeElevAngle);
+Features.ElevationKneeLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
+
+Features.JointAngleAnkleLmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleJointAngle);
+Features.JointAngleAnkleRmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleJointAngle);
+
+Features.JointAngleAnkleLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleJointAngle);
+Features.JointAngleAnkleRmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleJointAngle);
+
+Features.JointAngleAnkleLmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleElevAngle);
+Features.JointAngleAnkleLmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleElevAngle);
+
+Features.JointAngleAnkleLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleElevAngle);
+Features.JointAngleAnkleLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleElevAngle);
+
+Features.ElevationToeLmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.ToeElevAngle);
+Features.ElevationToeRmax(j+l,1)=max(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.ToeElevAngle);
+
+Features.ElevationToeLmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.ToeElevAngle);
+Features.ElevationToeRmin(j+l,1)=min(S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.ToeElevAngle);
+
+
+    end
+ l=l+j;   
+end
 %% EMG parameters
 EMGType={'Filtered','Rectified','Filtered3','Filtered4'};
 EMGSensorsLeft={'LMG','LTA'};
@@ -451,6 +519,23 @@ for i=1:3
 end
 
 
+%% MATRIC FOR FEATURES PCA
+
+l=0;
+for k=1:length(trials)
+    for j=1:length(PosIC_left.(trials{k}))-1
+           
+
+Features.DurationBurstLTA(j+l,1)=Bursts.Duration.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{2});
+Features.DurationBurstRGM(j+l,1)=Bursts.Duration.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{3});
+Features.MaxAmplitudeBurstLTA(j+l,1)=Bursts.MaxValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{2});
+Features.MaxAmplitudeBurstRGM(j+l,1)=Bursts.MaxValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{3});
+Features.MeanAmplitudeBurstLTA(j+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{2});
+Features.MeanAmplitudeBurstRGM(j+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{3});
+        
+    end
+    l=l+j;
+end
 
 
 

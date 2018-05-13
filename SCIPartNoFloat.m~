@@ -532,12 +532,12 @@ for k=1:length(trials)
     for j=1:length(StepPoints.(trials{k}).left)-1
            
 
-Features.DurationBurstLTA(j+l,1)=Bursts.Duration.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
-Features.DurationBurstRGM(j+l,1)=Bursts.Duration.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23});
-Features.MaxAmplitudeBurstLTA(j+l,1)=Bursts.MaxValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
-Features.MaxAmplitudeBurstRGM(j+l,1)=Bursts.MaxValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23});
-Features.MeanAmplitudeBurstLTA(j+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
-Features.MeanAmplitudeBurstRGM(j+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23});
+Features.DurationBurstLTA(k+l,1)=Bursts.Duration.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
+Features.DurationBurstRGM(k+l,1)=Bursts.Duration.(trials{i}).GaitCycles.(numbers{j}).(EMGSensors{23});
+Features.MaxAmplitudeBurstLTA(k+l,1)=Bursts.MaxValue.(trials{}).GaitCycles.(numbers{j}).(EMGSensors{16})
+Features.MaxAmplitudeBurstRGM(k+l,1)=Bursts.MaxValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23})
+Features.MeanAmplitudeBurstLTA(k+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{16});
+Features.MeanAmplitudeBurstRGM(k+l,1)=Bursts.MeanValue.(trials{k}).GaitCycles.(numbers{j}).(EMGSensors{23});
         
     end
     l=l+j;
