@@ -322,7 +322,7 @@ for n=1:2
                 S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).AnkleElevAngle(i)=Angle_ankle_vertical(i)*180/pi;
                 
                 % elevation toe from the ground
-                Angle_toe_hor(i)=asin(dot(VectorANKLE_TOE(i,:),Vertical)/(norm(VectorANKLE_TOE(i,:))*norm(Vertical)));
+                Angle_toe_hor(i)=acos(dot(VectorANKLE_TOE(i,:),Horizontal)/(norm(VectorANKLE_TOE(i,:))*norm(Horizontal)));
                 S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).ToeElevAngle(i)=Angle_toe_hor(i)*180/pi;
                 
             end
@@ -353,8 +353,8 @@ Features.StanceR(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Stance.
 Features.SwingL(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Swing.(all_sensors{2});
 Features.SwingR(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.Swing.(all_sensors{6});
 
-Features.MaxToeClereanceL(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{2});
-Features.MaxToeClereanceR(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{6});
+Features.StepHeightL(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{2});
+Features.StepHeightR(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{6});
 
 Features.KneeHeightL(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.KneeHeight.(all_sensors{4});
 Features.KneeHeightR(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.KneeHeight.(all_sensors{8});
@@ -395,14 +395,6 @@ Features.ElevationToeRmax(j+l,1)=max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}
 Features.ElevationToeLmin(j+l,1)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.ToeElevAngle);
 Features.ElevationToeRmin(j+l,1)=min(S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.ToeElevAngle);
 
-Features.MaxHeelClearanceL(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.MaxHeelClearance.(all_sensors{1});
-Features.MaxHeelClearanceR(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.MaxHeelClearance.(all_sensors{5});
-
-Features.StrideLengthL(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StrideLength.(all_sensors{2});
-Features.StrideLengthR(j+l,1)=S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.StrideLength.(all_sensors{6});
-
-Features.StrideSpeedL(j+l,1)=Features.StrideLengthL(j+l,1)./(120/Features.CadenceL(j+l,1));
-Features.StrideSpeedR(j+l,1)=Features.StrideLengthR(j+l,1)./(120/Features.CadenceR(j+l,1));
 
     end
  l=l+j;   

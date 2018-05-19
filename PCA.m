@@ -125,7 +125,7 @@ set(gca,'YDir','normal')
 title('PC1');
 set(gca,'TickLength',[0 0]);
 set(gca,'xtick',[]);
-for i=1:35
+for i=1:46
     hold on
     line([0.5 1.5], [i-0.5 i-0.5],'Color','k');
 end    

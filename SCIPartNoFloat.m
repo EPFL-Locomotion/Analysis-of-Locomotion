@@ -118,7 +118,11 @@ for k=1:length(trials)
 
             % max toe step height
             NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.StepHeight.(sensors{j})=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(:,3));
-       end
+            %stridelength
+             NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.StrideLength.(sensors{j})=sqrt((NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(end,2)-NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(1,2))^2+(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(end,1)-NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(1,1))^2);
+           
+        
+        end
     end
 end
 
@@ -134,6 +138,23 @@ for k=1:length(trials)
          
             % max knee height
             NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.KneeHeight.(sensors{j})=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(:,3));
+            
+        end
+    end
+end
+
+% max heel clereance 
+
+sensors={'LANK', 'RANK'};
+
+for k=1:length(trials)
+    
+    for i=1:length(StepPoints.(trials{k}).right)-1
+        
+        for j=1:length(sensors)
+         
+            % max knee height
+            NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.MaxHeelClearance.(sensors{j})=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{i}).Kin.(sensors{j})(:,3));
             
         end
     end
@@ -156,17 +177,17 @@ for n=1:2
             
             for i=1:size(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1}),1)
                 
-                TOE_points(i,:)=[NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1})(i,2) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1})(i,3)];
-                ANK_points(i,:)=[NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,2})(i,2) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,2})(i,3)];
-                KNE_points(i,:)=[NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,3})(i,2) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,3})(i,3)];
-                HIP_points(i,:)=[NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,4})(i,2) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,4})(i,3)];
+                TOE_points(i,:)=[NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1})(i,1) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1})(i,2) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1})(i,3)];
+                ANK_points(i,:)=[NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,2})(i,1) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,2})(i,2) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,2})(i,3)];
+                KNE_points(i,:)=[NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,3})(i,1) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,3})(i,2) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,3})(i,3)];
+                HIP_points(i,:)=[NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,4})(i,1) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,4})(i,2) NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,4})(i,3)];
                 
-                VectorANKLE_TOE(i,:)=[(ANK_points(i,1)-TOE_points(i,1)) (ANK_points(i,2)-TOE_points(i,2))];
-                VectorKNEE_ANKLE(i,:)=[(KNE_points(i,1)-ANK_points(i,1)) (KNE_points(i,2)-ANK_points(i,2))];
-                VectorHIP_KNEE(i,:)=[(HIP_points(i,1)-KNE_points(i,1)) (HIP_points(i,2)-KNE_points(i,2))];
+                VectorANKLE_TOE(i,:)=[(ANK_points(i,1)-TOE_points(i,1)) (ANK_points(i,2)-TOE_points(i,2)) (ANK_points(i,3)-TOE_points(i,3))];
+                VectorKNEE_ANKLE(i,:)=[(KNE_points(i,1)-ANK_points(i,1)) (KNE_points(i,2)-ANK_points(i,2)) (ANK_points(i,3)-TOE_points(i,3))];
+                VectorHIP_KNEE(i,:)=[(HIP_points(i,1)-KNE_points(i,1)) (HIP_points(i,2)-KNE_points(i,2)) (ANK_points(i,3)-TOE_points(i,3))];
                 
-                Vertical = [0 1];
-                Horizontal = [1 0];
+                Vertical = [0 0 1];
+                
                 
                 % hip angle to get extension/flexion
                 Angle_hip_vertical(i)=acos(dot(VectorHIP_KNEE(i,:),Vertical)/(norm(VectorHIP_KNEE(i,:))*norm(Vertical)));
@@ -189,7 +210,7 @@ for n=1:2
                 NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).AnkleElevAngle(i)=Angle_ankle_vertical(i)*180/pi;
                 
                 % elevation toe from the ground
-                Angle_toe_hor(i)=acos(dot(VectorANKLE_TOE(i,:),Horizontal)/(norm(VectorANKLE_TOE(i,:))*norm(Horizontal)));
+                Angle_toe_hor(i)=asin(dot(VectorANKLE_TOE(i,:),Vertical)/(norm(VectorANKLE_TOE(i,:))*norm(Vertical)));
                 NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).ToeElevAngle(i)=Angle_toe_hor(i)*180/pi;
                 
             end
@@ -217,8 +238,8 @@ Features.StanceR(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Ki
 Features.SwingL(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.Swing.(all_sensors{2});
 Features.SwingR(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.Swing.(all_sensors{6});
 
-Features.StepHeightL(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{2});
-Features.StepHeightR(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{6});
+Features.MaxToeClereanceL(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{2});
+Features.MaxToeClereanceR(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.StepHeight.(all_sensors{6});
 
 Features.KneeHeightL(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.KneeHeight.(all_sensors{4});
 Features.KneeHeightR(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.KneeHeight.(all_sensors{8});
@@ -239,7 +260,7 @@ Features.ElevationKneeLmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(
 Features.ElevationKneeRmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
 
 Features.ElevationKneeLmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.KneeElevAngle);
-Features.ElevationKneeLmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
+Features.ElevationKneeRmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.KneeElevAngle);
 
 Features.JointAngleAnkleLmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleJointAngle);
 Features.JointAngleAnkleRmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleJointAngle);
@@ -247,11 +268,11 @@ Features.JointAngleAnkleRmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles
 Features.JointAngleAnkleLmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleJointAngle);
 Features.JointAngleAnkleRmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleJointAngle);
 
-Features.JointAngleAnkleLmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleElevAngle);
-Features.JointAngleAnkleLmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleElevAngle);
+Features.ElevationAnkleLmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleElevAngle);
+Features.ElevationAnkleRmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleElevAngle);
 
-Features.JointAngleAnkleLmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleElevAngle);
-Features.JointAngleAnkleLmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleElevAngle);
+Features.ElevationAnkleLmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.AnkleElevAngle);
+Features.ElevationAnkleRmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.AnkleElevAngle);
 
 Features.ElevationToeLmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.ToeElevAngle);
 Features.ElevationToeRmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.ToeElevAngle);
@@ -259,6 +280,14 @@ Features.ElevationToeRmax(j+l,1)=max(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(n
 Features.ElevationToeLmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.LeftAngles.ToeElevAngle);
 Features.ElevationToeRmin(j+l,1)=min(NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.RightAngles.ToeElevAngle);
 
+Features.MaxHeelClearanceL(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.MaxHeelClearance.(all_sensors{1});
+Features.MaxHeelClearanceR(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.MaxHeelClearance.(all_sensors{5});
+
+Features.StrideLengthL(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.StrideLength.(all_sensors{2});
+Features.StrideLengthR(j+l,1)=NO_FLOAT_CRUTCHES.(trials{k}).GaitCycles.(numbers{j}).Kin.StrideLength.(all_sensors{6});
+
+Features.StrideSpeedL(j+l,1)=Features.StrideLengthL(j+l,1)./(120/Features.CadenceL(j+l,1));
+Features.StrideSpeedR(j+l,1)=Features.StrideLengthR(j+l,1)./(120/Features.CadenceR(j+l,1));
 
     end
  l=l+j;   
