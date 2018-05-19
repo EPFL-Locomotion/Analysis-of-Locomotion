@@ -291,13 +291,7 @@ for n=1:2
                 Vertical = [0 0 1];
                 Horizontal = S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1})(end,:)-S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1})(1,:);
                 
-                % hip angle to get extension/flexion
-                %if HIP_points(i,2)<=KNE_points(i,2)
-                    Angle_hip_vertical(i)=-asin(dot(VectorHIP_KNEE(i,:),Horizontal)/(norm(VectorHIP_KNEE(i,:))*norm(Horizontal)));
-                %else
-                    %Angle_hip_vertical(i)=acos(dot(VectorHIP_KNEE(i,:),Vertical)/(norm(VectorHIP_KNEE(i,:))*norm(Vertical)));
-               % end
-                
+                 Angle_hip_vertical(i)=-asin(dot(VectorHIP_KNEE(i,:),Horizontal)/(norm(VectorHIP_KNEE(i,:))*norm(Horizontal)));
                 S6_NO_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).HipAngle(i)=Angle_hip_vertical(i)*180/pi;
                 
                 % joint angle knee

@@ -64,14 +64,14 @@ end
 coeff(:,2)=coeff(:,2)/max(coeff(:,2));%normalization of the loadings
 
 figure;
-imagesc(coeff(:,2));
+imagesc(coeff_EMG(:,2));
 colorbar;
 caxis([-1 1]);
 set(gca,'YDir','normal')
 title('PC2');
 set(gca,'TickLength',[0 0]);
 set(gca,'xtick',[]);
-for i=1:40
+for i=1:46
     hold on
     line([0.5 1.5], [i-0.5 i-0.5],'Color','k');
 end   

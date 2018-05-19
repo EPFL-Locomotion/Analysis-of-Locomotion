@@ -299,10 +299,11 @@ for n=1:2
                 VectorHIP_KNEE(i,:)=[(HIP_points(i,1)-KNE_points(i,1)) (HIP_points(i,2)-KNE_points(i,2)) (HIP_points(i,3)-KNE_points(i,3))];
                 
                 Vertical = [0 0 1];
-              
+                Horizontal = S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1})(end,:)-S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,1})(1,:);
+                
                 
                 % hip angle to get extension/flexion
-                Angle_hip_vertical(i)=acos(dot(VectorHIP_KNEE(i,:),Vertical)/(norm(VectorHIP_KNEE(i,:))*norm(Vertical)));
+                Angle_hip_vertical(i)=-asin(dot(VectorHIP_KNEE(i,:),Horizontal)/(norm(VectorHIP_KNEE(i,:))*norm(Horizontal)));
                 S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).HipAngle(i)=Angle_hip_vertical(i)*180/pi;
                 
                 % joint angle knee
@@ -310,7 +311,7 @@ for n=1:2
                 S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).KneeJointAngle(i)=Angle_knee(i)*180/pi;
                 
                 % elevation angle of the knee joint
-                Angle_knee_vertical(i)=acos(dot(VectorKNEE_ANKLE(i,:),Vertical)/(norm(VectorKNEE_ANKLE(i,:))*norm(Vertical)));
+                Angle_knee_vertical(i)=-asin(dot(VectorKNEE_ANKLE(i,:),Horizontal)/(norm(VectorKNEE_ANKLE(i,:))*norm(Horizontal)));
                 S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).KneeElevAngle(i)=Angle_knee_vertical(i)*180/pi;
                 
                 % joint angle ankle
@@ -318,7 +319,7 @@ for n=1:2
                 S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).AnkleJointAngle(i)=Angle_ankle(i)*180/pi;
                 
                 % elevation angle af the ankle joint
-                Angle_ankle_vertical(i)=acos(dot(VectorANKLE_TOE(i,:),Vertical)/(norm(VectorANKLE_TOE(i,:))*norm(Vertical)));
+                Angle_ankle_vertical(i)=-asin(dot(VectorANKLE_TOE(i,:),Horizontal)/(norm(VectorANKLE_TOE(i,:))*norm(Horizontal)));
                 S6_FLOAT.(trials{k}).GaitCycles.(numbers{j}).Kin.(sensors{n,5}).AnkleElevAngle(i)=Angle_ankle_vertical(i)*180/pi;
                 
                 % elevation toe from the ground
