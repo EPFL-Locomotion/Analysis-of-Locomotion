@@ -115,36 +115,18 @@ xticklabels(SortedFeaturesEMG(1));
 title({'Loadings of the 1st principal component (sorted)'});
 xlabel('Features');
 
-coeff_EMG(:,1)=coeff_EMG(:,1)/max(coeff_EMG(:,1));%normalization of the loadings
+coeff_EMG(:,1)=coeff_EMG(:,1)/max(coeff_EMG(:,1));
 
 figure;
 imagesc(coeff_EMG(:,1));
 cb=colorbar;
-caxis([-1 1]);
+caxis(-1,1);
 set(gca,'YDir','normal')
 title('PC1');
-set(gca,'TickLength',[0 0]);
-set(gca,'xtick',[]);
-for i=1:35
-    hold on
-    line([0.5 1.5], [i-0.5 i-0.5],'Color','k');
-end    
-
-
-coeff_EMG(:,2)=coeff_EMG(:,2)/max(coeff_EMG(:,2));%normalization of the loadings
-
-figure;
-imagesc(coeff_EMG(:,2));
-colorbar;
-caxis([-1 1]);
-set(gca,'YDir','normal')
-title('PC2');
-set(gca,'TickLength',[0 0]);
-set(gca,'xtick',[]);
-for i=1:35
-    hold on
-    line([0.5 1.5], [i-0.5 i-0.5],'Color','k');
-end    
+%yticks(35:1);
+xticks(1.5:0.5);
+%yticklabels(SortedFeaturesEMG);
+%xlabel('1PC');
 %% plot
 figure;
 scatter3(score_EMG(1:Size1,1),score_EMG(1:Size1,2),score_EMG(1:Size1,3),'filled');
