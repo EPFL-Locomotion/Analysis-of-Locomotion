@@ -2,6 +2,8 @@ clear all
 close all
 clc
 
+%%This is only a file to show how preprocessing works on our data
+
 %Healthy without float
 
 addpath(genpath('Healthy Recordings\Subject6\NO_FLOAT'));
@@ -44,21 +46,26 @@ end
 
 figure(1)
 subplot(2,3,1)
-plot(S6_NO_FLOAT.T_02.Raw.EMG.LTA)
+plot([1:length(S6_NO_FLOAT.T_02.Raw.EMG.LTA)]/1000,S6_NO_FLOAT.T_02.Raw.EMG.LTA)
 title('Raw signal');
 subplot(2,3,2)
-plot(S6_NO_FLOAT.T_02.Filtered.LTA)
-title('BP filter 10-499 Hz');
+plot([1:length(S6_NO_FLOAT.T_02.Filtered.LTA)]/1000,S6_NO_FLOAT.T_02.Filtered.LTA)
+title('High-pass filter 10 Hz');
 subplot(2,3,3)
-plot(S6_NO_FLOAT.T_02.Rectified.LTA)
+plot([1:length(S6_NO_FLOAT.T_02.Rectified.LTA)]/1000,S6_NO_FLOAT.T_02.Rectified.LTA)
 title('Rectification');
-subplot(2,3,4)
-plot(S6_NO_FLOAT.T_02.Filtered3.LTA)
+positionVector1 = [0.20, 0.22, 0.3, 0.2];
+subplot('Position',positionVector1)
+plot([1:length(S6_NO_FLOAT.T_02.Filtered3.LTA)]/1000,S6_NO_FLOAT.T_02.Filtered3.LTA)
 title('Notch filter 50 Hz');
-subplot(2,3,5)
-plot(S6_NO_FLOAT.T_02.Filtered4.LTA)
-title('LP filter 10 Hz');
-suptitle('Tibialis anterior - left')
+positionVector2 = [0.55, 0.22, 0.3, 0.2];
+subplot('Position',positionVector2)
+plot([1:length(S6_NO_FLOAT.T_02.Filtered4.LTA)]/1000,S6_NO_FLOAT.T_02.Filtered4.LTA)
+title('Low-pass filter 10 Hz');
+suptitle('Sensor LTA')
+suplabel('Time [s]');
+suplabel('Amplitude [mV]','y');
+
 
 figure(2)
 subplot(2,3,1)
