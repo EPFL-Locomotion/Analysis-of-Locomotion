@@ -454,15 +454,18 @@ for k=1:length(trials)
 end
 
 
+%%-figures
 figure
 for k=1:length(trials)
      for i=1:4
          subplot(3,4,4*(k-1)+i)
-         plot(S6_FLOAT.(trials{k}).Raw.EMG.(EMGSensors{i}));
+         plot([0:(length(S6_FLOAT.(trials{k}).Raw.EMG.(EMGSensors{i}))-1)]/(S6_FLOAT.(TrialName).fsEMG),S6_FLOAT.(trials{k}).Raw.EMG.(EMGSensors{i}));
          title(sprintf('Trial %d - Sensor %s',k,EMGSensors{i}));
      end
 end
 suptitle('Raw signal');
+suplabel('Time [s]');
+suplabel('Amplitude [mV]','y');
 
 
 figure
@@ -515,11 +518,11 @@ for k=1:length(trials)
     for i=1:length(fieldnames(S6_FLOAT.(trials{k}).GaitCycles))
          for j=2%[2,3]
             %Assumption#1.1: for LTA between 750 and 1250 it is always noise
-            %Assumption#1.2: we put a higher limit for 2*std
-            clear StdNoise;
-            clear indeces;
-            StdNoise=min([std(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(750:1250)),0.0375/2]);
-            indeces=find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise));
+            %Assumption#1.2: we put a higher limit for 2*std (threshold
+            %cannot be more than 60% the maximum amplitude of the filtered
+            %signal)=>2std<=0.6/2*max=0.3*max
+            StdNoise{k,1}(i)=min([std(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(750:1250)),0.30*max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j}))]);
+            indeces=find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise{k,1}(i)));
             %Assumption#2: minimum burst length is 350
             Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=[];
             for l=1:(length(indeces)-1)
@@ -539,13 +542,15 @@ for k=1:length(trials)
                 Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(2,1)=length(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j}));
             end    
             
-            %Particular case#2: false internal burst
+            %Particular case#2: false internal burst [i.e. the burst
+            %actually starts but then goes slightly under threshold: when it goes
+            %over threshold once more it creates a false burst]
             for l=1:(length(Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}))-2)
                if (Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l+1)-Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l)<=300)  
                     %remove the two successive burst indeces (because that
                     %burst is just inside the real big burst)
                     Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}) = Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})~=Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l+1));
-                    Bursts.Position.(trials{1}).GaitCycles.(numbers{i}).(EMGSensors{j}) = Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})~=Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l+1));
+                    Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}) = Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})~=Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l+1));
                end
             end
             
@@ -558,11 +563,11 @@ for k=1:length(trials)
     for i=1:length(fieldnames(S6_FLOAT.(trials{k}).GaitCycles))
          for j=3%[2,3]
             %Assumption#1.1: for LTA between 750 and 1250 it is always noise
-            %Assumption#1.2: we put a higher limit for 2*std
-            clear StdNoise;
-            clear indeces;
-            StdNoise=min([std(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(750:1250)),0.0375/2]);
-            indeces=find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise));
+            %Assumption#1.2: we put a higher limit for 2*std (threshold
+            %cannot be more than 40% the maximum amplitude of the filtered
+            %signal)=>2std<=0.4/2*max=0.2*max
+            StdNoise{k,2}(i)=min([std(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{j})(750:1250)),0.2*max(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j}))]);
+            indeces=find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j})>=(2*StdNoise{k,2}(i)));
             %Assumption#2: minimum burst length is 350
             Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})=[];
             for l=1:(length(indeces)-1)
@@ -583,22 +588,54 @@ for k=1:length(trials)
                 Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(2,1)=length(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{j}));
             end    
                         
-            %Particular case#2: false internal burst
+            %Particular case#2: false internal burst [i.e. the burst
+            %actually starts but then goes slightly under threshold: when it goes
+            %over threshold once more it creates a false burst]
             for l=1:(length(Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}))-2)
                if (Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l+1)-Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l)<=300)  
                     %remove the two successive burst indeces (because that
                     %burst is just inside the real big burst)
                     Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}) = Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})~=Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l+1));
-                    Bursts.Position.(trials{1}).GaitCycles.(numbers{i}).(EMGSensors{j}) = Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})~=Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l+1));
+                    Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j}) = Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})~=Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{j})(l+1));
                end
             end
             
-         end   
+         end
+         
     end
 end
 
-
-
+for l=2:3
+    for k=1:length(fieldnames(Bursts.Position))
+    NoRows=length(fieldnames(Bursts.Position.(trials{k}).GaitCycles));
+    
+ figure
+for i=1:length(fieldnames(Bursts.Position.(trials{k}).GaitCycles))
+    z1=Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{l})(1,1);
+    z2=Bursts.Position.(trials{k}).GaitCycles.(numbers{i}).(EMGSensors{l})(2,1);
+    asse=[1:length(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{l}))]/1000;   
+    subplot(NoRows,2,2*(i-1)+1)
+    plot(asse,S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{l}))
+    ylabel(sprintf('Gait cycle %s',numbers{i}))
+    hold on
+    subplot(NoRows,2,2*(i-1)+1)
+    %YRect=S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{l})(750);
+    YRect=mean(S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Raw.(EMGSensors{l})(750:1250))-StdNoise{k,l-1}(i);
+    rectangle('Position',[0.75 YRect 0.5 2*StdNoise{k,l-1}(i)],'EdgeColor','r')
+    subplot(NoRows,2,2*i)
+    plot(asse,S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{l}))
+    hold on
+    subplot(NoRows,2,2*i)
+    plot(asse,2* StdNoise{k,l-1}(i)*ones(length(asse),1),':r')
+    subplot(NoRows,2,2*i)
+    plot(z1/1000,S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{l})(z1),'xr')
+    subplot(NoRows,2,2*i)
+    plot(z2/1000,S6_FLOAT.(trials{k}).GaitCycles.(numbers{i}).EMG.Filtered4.(EMGSensors{l})(z2),'xr')
+    
+end
+suptitle(sprintf('Sensor %s - Trial %s', EMGSensors{l}, trials{k}))
+end
+end
 %%
 %%Bursts calculation visually
 % Bursts.Position.T_01.GaitCycles.One.LTA=[203 1353];
