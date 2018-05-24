@@ -1,4 +1,4 @@
-function [Features]=SCIPartNoFloat(Kinfreq,EMGfreq)
+function [Features]=SCIPartNoFloat(Kinfreq)
 
 % adding the paths and loading data
 

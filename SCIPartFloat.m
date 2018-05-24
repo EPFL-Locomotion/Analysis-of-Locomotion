@@ -1,4 +1,4 @@
-function [Features]=SCIPartFloat(Kinfreq,EMGfreq)
+function [Features]=SCIPartFloat(Kinfreq)
 
 % adding the paths and loading data
 
@@ -14,12 +14,12 @@ data3 = readtable('SCI_HCU_20150505_04OVGb_45BWS_vFWD_noAD_05_GAIT.csv');
 
 %% Getting the StepPoints
 
-StepPoints.T_01.left=table2array(data1(1:6,4))*100;
-StepPoints.T_01.right=table2array(data1(14:19,4))*100;
-StepPoints.T_02.left=table2array(data2(1:5,4))*100;
-StepPoints.T_02.right=table2array(data2(12:16,4))*100;
-StepPoints.T_03.left=table2array(data3(1:6,4))*100;
-StepPoints.T_03.right=table2array(data3(12:17,4))*100;
+StepPoints.T_01.left=table2array(data1(1:6,4))*Kinfreq;
+StepPoints.T_01.right=table2array(data1(14:19,4))*Kinfreq;
+StepPoints.T_02.left=table2array(data2(1:5,4))*Kinfreq;
+StepPoints.T_02.right=table2array(data2(12:16,4))*Kinfreq;
+StepPoints.T_03.left=table2array(data3(1:6,4))*Kinfreq;
+StepPoints.T_03.right=table2array(data3(12:17,4))*Kinfreq;
 
 %% EMG filtering
 Trials=fieldnames(FLOAT_NO_CRUTCHES);
@@ -220,9 +220,6 @@ for n=1:2
 end
 
 %% ALL FEATURES INTO A MATRIX
-
-%SCI_Float subject: matrix(14*29)
-
 
 
 Features.CadenceL=[(120./(diff(StepPoints.T_01.left)/100));(120./(diff(StepPoints.T_02.left)/100));(120./(diff(StepPoints.T_03.left)/100))];

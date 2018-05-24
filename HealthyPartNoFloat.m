@@ -1,4 +1,4 @@
-function [Features]=HealthyPartNoFloat(Kinfreq,EMGfreq)
+function [Features]=HealthyPartNoFloat(Kinfreq)
 
 % adding the paths and loading data
 
@@ -60,13 +60,12 @@ for i=1:length(S6_NO_FLOAT.T_01.Raw.Kin.LTOE)
     
     addpoints(curveLTOE, S6_NO_FLOAT.T_01.Raw.Kin.LTOE(i,1), S6_NO_FLOAT.T_01.Raw.Kin.LTOE(i,2), S6_NO_FLOAT.T_01.Raw.Kin.LTOE(i,3));
     addpoints(curveLANK, S6_NO_FLOAT.T_01.Raw.Kin.LANK(i,1), S6_NO_FLOAT.T_01.Raw.Kin.LANK(i,2), S6_NO_FLOAT.T_01.Raw.Kin.LANK(i,3));
-    % plot3([S6_FLOAT.T_01.Raw.Kin.LTOE(i,1), S6_FLOAT.T_01.Raw.Kin.LANK(i,1)], [S6_FLOAT.T_01.Raw.Kin.LTOE(i,2), S6_FLOAT.T_01.Raw.Kin.LANK(i,2)], [S6_FLOAT.T_01.Raw.Kin.LTOE(i,3), S6_FLOAT.T_01.Raw.Kin.LANK(i,3)]);
-   
+    
     addpoints(curveLHIP, S6_NO_FLOAT.T_01.Raw.Kin.LHIP(i,1), S6_NO_FLOAT.T_01.Raw.Kin.LHIP(i,2), S6_NO_FLOAT.T_01.Raw.Kin.LHIP(i,3));
     addpoints(curveLKNE, S6_NO_FLOAT.T_01.Raw.Kin.LKNE(i,1), S6_NO_FLOAT.T_01.Raw.Kin.LKNE(i,2), S6_NO_FLOAT.T_01.Raw.Kin.LKNE(i,3));
    
     drawnow limitrate
-    % pause(0.1);
+    
     
 end
 hold off;
@@ -330,8 +329,8 @@ all_sensors={'LANK', 'LTOE', 'LHIP','LKNE','RANK', 'RTOE', 'RHIP', 'RKNE'};
 numbers={'One', 'Two', 'Three', 'Four'};
 trials={'T_01', 'T_02', 'T_03'};
 
-Features.CadenceL=[(120./(diff(PosIC_left.T_01)/100)),(120./(diff(PosIC_left.T_02)/100)),(120./(diff(PosIC_left.T_03)/100))]';
-Features.CadenceR=[120./(diff(PosIC_right.T_01)/100),120./(diff(PosIC_right.T_02)/100),120./(diff(PosIC_right.T_03)/100)]';
+Features.CadenceL=[(120./(diff(PosIC_left.T_01)/100)),(120./(diff(PosIC_left.T_02)/100)),(120./(diff(PosIC_left.T_03)/Kinfreq))]';
+Features.CadenceR=[120./(diff(PosIC_right.T_01)/100),120./(diff(PosIC_right.T_02)/100),120./(diff(PosIC_right.T_03)/Kinfreq)]';
 
 l=0;
 for k=1:length(trials)

@@ -1,17 +1,10 @@
-%% PCA-Kinematics
-%the total matrix is the following:
-
-%Healthy_Float subject: matrix(9*29);
-%Healthy_NO_Float subject: matrix(10*29);
-%SCI_FLOAT subject: matrix(14*29);
-%NO_SCI_FLOAT subject: matrix(21*29);
 
 
-%% PCA-Kinematics (54*40)
-[FeaturesSCINoFloat]=SCIPartNoFloat(100,1000);
-[FeaturesSCIFloat]=SCIPartFloat(100,1000);
-[FeaturesHealthyFloat]=HealthyPartFloat(100,1000);
-[FeaturesHealthyNoFloat]=HealthyPartNoFloat(100,1000);
+%% Matrix with all the kinematic features
+[FeaturesSCINoFloat]=SCIPartNoFloat(100);
+[FeaturesSCIFloat]=SCIPartFloat(100);
+[FeaturesHealthyFloat]=HealthyPartFloat(100);
+[FeaturesHealthyNoFloat]=HealthyPartNoFloat(100);
 NumbFeatures=(fieldnames(FeaturesSCINoFloat));
 
 for i=1:size(fieldnames(FeaturesSCINoFloat),1)-6
@@ -20,6 +13,7 @@ for i=1:size(fieldnames(FeaturesSCINoFloat),1)-6
 
 end
 
+% Pca on kinematic features and plot of the explain variance
 
 [coeff,score,variance,~,explain]=pca(zscore(PCAKinMatrix));
 figure;
@@ -29,20 +23,18 @@ xlabel('Principal Components');
 ylabel('Explain Variance');
 grid on
 
-% we see that the 3 principal component, 1PC='54.51', 2PC=15.56,  3PC=9.97 are able to
-% explain:sum(explain(1:3))=80% of total variance)
-
+%plot of the loading of the first principal component   
 [sorted_coeff1P, sorting_value1P] = sort(abs(coeff(:,1)),'descend');
 SortedFeatures = NumbFeatures(sorting_value1P);
 figure
 bar(sorted_coeff1P);
-xticks(1:29);
+xticks(1:40);
 xticklabels(SortedFeatures(1));
 title({'Loadings of the 1st principal component (sorted)'});
 xlabel('Features');
-%% GOOD PLOT 1 AND 2 COMPONENT
 
 
+% rappresentation of coefficient of 1PC
 coeff(:,1)=coeff(:,1)/max(coeff(:,1));%normalization of the loadings
 
 figure;
@@ -59,26 +51,26 @@ for i=1:40
 end   
 
 
-
+% rappresentation of coefficient of 2PC
 
 coeff(:,2)=coeff(:,2)/max(coeff(:,2));%normalization of the loadings
 
 figure;
-imagesc(coeff_EMG(:,2));
+imagesc(coeff(:,2));
 colorbar;
 caxis([-1 1]);
 set(gca,'YDir','normal')
 title('PC2');
 set(gca,'TickLength',[0 0]);
 set(gca,'xtick',[]);
-for i=1:46
+for i=1:40
     hold on
     line([0.5 1.5], [i-0.5 i-0.5],'Color','k');
 end   
 
 
-%% plot
-%%rappresention in 3D
+
+%rappresention in 3D of the kineamtic features
 i=1;
 
 Size1=size(FeaturesSCINoFloat.(NumbFeatures{i}),1);
@@ -100,7 +92,7 @@ zlabel('3PC');
 legend('SCINoFloat','SCIFloat','HealthyFloat','HealthyNoFloat');
 
 
-%%rappresenation in 2D
+% rappresenation in 2D of the kinematic features
 
 figure;
 scatter(score(1:Size1,1),score(1:Size1,2),'filled');
@@ -114,8 +106,7 @@ xlabel('1PC');
 ylabel('2PC');
 legend('SCINoFloat','SCIFloat','HealthyFloat','HealthyNoFloat');
 
-%% PCA Kinematics plus emg (54*46)
-
+%% PCA on Kinematics and emg features
 
 
 for i=1:size(fieldnames(FeaturesSCINoFloat),1)
@@ -124,6 +115,7 @@ for i=1:size(fieldnames(FeaturesSCINoFloat),1)
 
 end
 
+ 
 
 [coeff_EMG,score_EMG,variance_EMG,~,explainEMG]=pca(zscore(PCAEMGKinMatrix));
 figure;
@@ -132,9 +124,9 @@ title('Principal Component explaning variances');
 xlabel('Principal Components');
 ylabel('Explain Variance');
 grid on
-% we see that the 3 principal component, 1PC:51.4810, 2PC:14.1584, 3PC:12.1791 are able to
-% explain:sum(explainEMG(1:3))=77.81% of total variance)
 
+
+%plot of the loading of the first principal component  
 [sorted_coeff1PEMG, sorting_value1PEMG] = sort(abs(coeff_EMG(:,1)),'descend');
 SortedFeaturesEMG = NumbFeatures(sorting_value1PEMG);
 figure
@@ -143,9 +135,9 @@ xticks(1:35);
 xticklabels(SortedFeaturesEMG(1));
 title({'Loadings of the 1st principal component (sorted)'});
 xlabel('Features');
-%% GOOD PLOT 1 AND 2
-coeff_EMG(:,1)=coeff_EMG(:,1)/max(coeff_EMG(:,1));%normalization of the loadings
 
+% rappresentation of coefficient of 1PC
+coeff_EMG(:,1)=coeff_EMG(:,1)/max(coeff_EMG(:,1));%normalization of the loadings
 figure;
 imagesc(coeff_EMG(:,1));
 cb=colorbar;
@@ -159,9 +151,8 @@ for i=1:46
     line([0.5 1.5], [i-0.5 i-0.5],'Color','k');
 end    
 
-
+% rappresentation of coefficient of 2PC
 coeff_EMG(:,2)=coeff_EMG(:,2)/max(coeff_EMG(:,2));%normalization of the loadings
-
 figure;
 imagesc(coeff_EMG(:,2));
 colorbar;
@@ -173,8 +164,9 @@ set(gca,'xtick',[]);
 for i=1:46
     hold on
     line([0.5 1.5], [i-0.5 i-0.5],'Color','k');
-end    
-%% plot
+end  
+
+% rappresenation in 3D of the kinematic features 
 figure;
 scatter3(score_EMG(1:Size1,1),score_EMG(1:Size1,2),score_EMG(1:Size1,3),'filled');
 hold on
@@ -189,7 +181,7 @@ zlabel('3PC');
 legend('SCINoFloat','SCIFloat','HealthyFloat','HealthyNoFloat');
 
 
-%%rappresenation in 2D
+% rappresenation in 2D of the kinematic features
 
 figure;
 scatter(score_EMG(1:Size1,1),score_EMG(1:Size1,2),'filled');

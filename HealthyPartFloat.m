@@ -1,4 +1,4 @@
-function [Features]=HealthyPartFloat(Kinfreq,EMGfreq)
+function [Features]=HealthyPartFloat(Kinfreq)
 % adding the paths and loading data
 
 addpath(genpath('Healthy Recordings/Subject6/FLOAT'));
@@ -57,8 +57,7 @@ for i=1:1033
     
     addpoints(curveLTOE, S6_FLOAT.T_01.Raw.Kin.LTOE(i,1), S6_FLOAT.T_01.Raw.Kin.LTOE(i,2), S6_FLOAT.T_01.Raw.Kin.LTOE(i,3));
     addpoints(curveLANK, S6_FLOAT.T_01.Raw.Kin.LANK(i,1), S6_FLOAT.T_01.Raw.Kin.LANK(i,2), S6_FLOAT.T_01.Raw.Kin.LANK(i,3));
-    % plot3([S6_FLOAT.T_01.Raw.Kin.LTOE(i,1), S6_FLOAT.T_01.Raw.Kin.LANK(i,1)], [S6_FLOAT.T_01.Raw.Kin.LTOE(i,2), S6_FLOAT.T_01.Raw.Kin.LANK(i,2)], [S6_FLOAT.T_01.Raw.Kin.LTOE(i,3), S6_FLOAT.T_01.Raw.Kin.LANK(i,3)]);
-   
+    
     addpoints(curveLHIP, S6_FLOAT.T_01.Raw.Kin.LHIP(i,1), S6_FLOAT.T_01.Raw.Kin.LHIP(i,2), S6_FLOAT.T_01.Raw.Kin.LHIP(i,3));
     addpoints(curveLKNE, S6_FLOAT.T_01.Raw.Kin.LKNE(i,1), S6_FLOAT.T_01.Raw.Kin.LKNE(i,2), S6_FLOAT.T_01.Raw.Kin.LKNE(i,3));
    
@@ -83,9 +82,6 @@ for k=1:length(trials)
     end
 end
 
-%             S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i})=S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i})(find(S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i})~=0));
-%            S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i})( all(~S6_FLOAT.(trials{k}).GaitCycles.(numbers{n}).(sensors_left{i}),2), : ) = [];
-        
 
 %% split in cycles right T_01
 
@@ -340,8 +336,8 @@ all_sensors={'LANK', 'LTOE', 'LHIP','LKNE','RANK', 'RTOE', 'RHIP', 'RKNE'};
 numbers={'One', 'Two', 'Three', 'Four'};
 trials={'T_01', 'T_02', 'T_03'};
 
-Features.CadenceL=[(120./(diff(PosIC_left.T_01)/100)),(120./(diff(PosIC_left.T_02)/100)),(120./(diff(PosIC_left.T_03)/100))]';
-Features.CadenceR=[120./(diff(PosIC_right.T_01)/100),120./(diff(PosIC_right.T_02)/100),120./(diff(PosIC_right.T_03)/100)]';
+Features.CadenceL=[(120./(diff(PosIC_left.T_01)/100)),(120./(diff(PosIC_left.T_02)/100)),(120./(diff(PosIC_left.T_03)/Kinfreq))]';
+Features.CadenceR=[120./(diff(PosIC_right.T_01)/100),120./(diff(PosIC_right.T_02)/100),120./(diff(PosIC_right.T_03)/Kinfreq)]';
 
 l=0;
 for k=1:length(trials)
